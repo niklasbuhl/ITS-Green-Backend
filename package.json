@@ -1,0 +1,24 @@
+{
+  "name": "sync-backend-web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "javascript.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niklasbuhl/sync-backend-web.git"
+  },
+  "author": "Niklas Buhl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/niklasbuhl/sync-backend-web/issues"
+  },
+  "homepage": "https://github.com/niklasbuhl/sync-backend-web#readme",
+  "dependencies": {
+    "jquery": "^3.4.1",
+    "leaflet": "^1.5.0",
+    "leaflet-rotatedmarker": "^0.2.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "intxns": {
+    "i01" : {
+      "name" : "Første Signal",
+      "loc" : {
+        "lat" : 55.727573,
+        "lon" : 12.396438
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 0 },
+        "s02" : { "type" : "regular", "course" : 90 },
+        "s03" : { "type" : "regular", "course" : 180 },
+        "s04" : { "type" : "regular", "course" : 270 }
+      }
+    }
+  }
+}
