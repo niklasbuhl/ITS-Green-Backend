@@ -225,7 +225,7 @@ class Intersection:
         for sig in self.signals:
             self.signals[sig].print()
 
-        print(f"\n")
+        print("\n")
 
     def getLocation(self):
         return self.loc
