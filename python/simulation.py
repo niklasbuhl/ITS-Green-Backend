@@ -1,9 +1,10 @@
 from enum import Enum
 import random
 import threading
-
-from utility import *
 import json
+
+from world import CONFIG
+from utility import ms
 
 class Location():
 
@@ -66,7 +67,7 @@ class Signal(threading.Thread):
         self.type = type
         self.course = course
 
-        if(testSimulation): self.setRandomCycleStart()
+        if not CONFIG['data']['intxns']['realtiming']: self.setRandomCycleStart()
 
     def setCycleTime(red, orange, green, yellow):
 
@@ -90,12 +91,12 @@ class Signal(threading.Thread):
 
     def run(self):
 
-        if debug: print(f"Starting signal")
+        if CONFIG['debug']['signal']: print(f"Starting signal")
 
         while self.keepAlive:
             self.update()
 
-        if debug: print(f"Exiting signal")
+        if CONFIG['debug']['signal']: print(f"Exiting signal")
 
     def update(self):
 
@@ -105,13 +106,11 @@ class Signal(threading.Thread):
 
         timeSinceUpdate =  now - self.lastUpdate
 
-
-
         if timeSinceUpdate < 100:
             self.lock.release()
             return
 
-        if debugSignalUpdateTiming:
+        if CONFIG['debug']['signalTiming']:
             print(f"[{self.intxnId}][{self.id}] TTG: {round((self.ttg / 1000), 1)}")
             # print(f"[{self.intxnId}][{self.id}] TSU: {timeSinceUpdate} - Time to update!")
 
@@ -137,12 +136,12 @@ class Signal(threading.Thread):
         self.lastUpdate = now
 
         if prevState != self.state:
-            self.printState()
+            if CONFIG['debug']['signalState']: self.printState()
 
         self.lock.release()
 
     def stop(self):
-        if debug: print("Exitting threads.")
+        if CONFIG['debug']['signal']: print("Exitting threads.")
         #self.stop.set()
         self.keepAlive = False
 
@@ -219,6 +218,9 @@ class Intersection:
 
         print(f"\n")
 
+    def getLocation(self):
+        return self.loc
+
 
 # Thread
 class Simulation():
@@ -236,7 +238,7 @@ class Simulation():
         if self.loadedIntersections: return
 
         for intxn in data['intxns']:
-            if debug: print(intxn)
+            # if CONFIG['debug']['intersection']: print(intxn)
 
             # Extract Data
             id = intxn
@@ -252,7 +254,7 @@ class Simulation():
 
             # Signal
             for sig in data['intxns'][intxn]['sigs']:
-                if debug: print(sig)
+                # if CONFIG['debug']['signal']: print(sig)
 
                 id = sig
                 type = data['intxns'][intxn]['sigs'][sig]['type']
@@ -264,7 +266,7 @@ class Simulation():
                 newIntersection.addSignal(newSig)
 
             # Add Intersection
-            if debug: newIntersection.print()
+            if CONFIG['debug']['intersection']: newIntersection.print()
 
             self.addIntersection(newIntersection)
 
@@ -286,3 +288,33 @@ class Simulation():
     def stop(self):
         for intxn in self.intxns:
             self.intxns[intxn].stop()
+
+    def getIntxnsAndSignals(self):
+
+        json_data = {}
+
+        for int in self.intxns:
+
+            intersection = {}
+
+            intersection['lat'] = self.intxns[int].loc.lat
+            intersection['lon'] = self.intxns[int].loc.lon
+
+            signals = {}
+
+            for sig in self.intxns[int].signals:
+
+                signal = {}
+
+                signal['course']  = self.intxns[int].signals[sig].course
+
+                signals[sig] = signal
+
+            intersection['signals'] = signals
+
+            json_data[int] = intersection
+
+
+        if CONFIG['debug']['intersectionGetData']: print(json)
+
+        return json_data

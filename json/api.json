@@ -1,0 +1,87 @@
+{
+  "api" : {
+    "version" : "0.0.1"
+  },
+
+  "pages" : {
+    "hello" : "/",
+    "map" : "/map",
+    "control" : "/control/",
+    "color" : "/color/"
+  },
+
+  "sim" : {
+    "getIntxns" : {
+      "url" : "/api/sim/getintxnsn/"
+    },
+
+    "getSignalStateAll" : {
+      "url" : "/api/sim/getallss"
+    },
+
+    "getSignalStateSpecified" : {
+      "url" : "/api/sim/getspecss",
+      "args" : {
+        "signalArray" : "array"
+      }
+    },
+
+    "getSignalState" : {
+      "url" : "/api/sim/signal/getss/",
+      "args" : {
+        "intxnId" : "string",
+        "sigId" : "string"
+      }
+    },
+
+    "getSignalTTG" : {
+      "url" : "/api/sim/signal/ttg/",
+      "args" : {
+        "intxnId" : "string",
+        "sigId" : "string"
+      }
+    },
+
+    "start" : {
+      "url" : "/api/sim/start/"
+    },
+
+    "stop" : {
+      "url" : "/api/sim/stop/"
+    }
+
+  },
+
+  "session" : {
+
+    "setBicycle" : {
+      "url" : "/api/session/setbicycle/"
+    },
+
+    "getBicycle" : {
+      "url" : "/api/session/getbicycle/"
+    },
+    "getColor" : {
+      "url" : "/api/session/getcolor/"
+    },
+    "setRoute" : {
+      "url" : "/api/session/setroute/"
+    },
+
+    "getRoute" : {
+      "url" : "/api/session/getroute/"
+    },
+    "getSignals" : {
+      "url" : "/api/session/getsignals/"
+
+    },
+
+    "getIntxns" : {
+      "url" : "/api/session/getintxns/"
+    },
+
+    "getNextIntxn" : {
+      "url" : "/api/session/getnextintxn/"
+    }
+  }
+}

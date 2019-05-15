@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" creator="https://www.cyclestreets.net:443/" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Frederikssundsvej to Dronning Louises Bro</name>
+    <desc>Cycle: Frederikssundsvej to Dronning Louises Bro</desc>
+    <link href="https://www.cyclestreets.net:443/journey/65156005/"/>
+  </metadata>
+  <rte>
+    <name>Quietest Frederikssundsvej to Dronning Louises Bro</name>
+    <desc>Quietest cycle journey from Frederikssundsvej to Dronning Louises Bro</desc>
+    <rtept lon="12.51904" lat="55.7064">
+      <name>Frederikssundsvej, 211</name>
+    </rtept>
+    <rtept lon="12.52168" lat="55.70596">
+      <name>Frederikssundsvej</name>
+    </rtept>
+    <rtept lon="12.52941" lat="55.70338">
+      <name>Frederikssundsvej</name>
+    </rtept>
+    <rtept lon="12.53637" lat="55.70124">
+      <name>Frederikssundsvej</name>
+    </rtept>
+    <rtept lon="12.53723" lat="55.70107">
+      <name>N&#xF8;rrebrogade</name>
+    </rtept>
+    <rtept lon="12.53736" lat="55.70105">
+      <name>N&#xF8;rrebrogade</name>
+    </rtept>
+    <rtept lon="12.53912" lat="55.70049">
+      <name>N&#xF8;rrebrogade</name>
+    </rtept>
+    <rtept lon="12.5448" lat="55.69698">
+      <name>N&#xF8;rrebrogade</name>
+    </rtept>
+    <rtept lon="12.55581" lat="55.68972">
+      <name>N&#xF8;rrebrogade</name>
+    </rtept>
+    <rtept lon="12.56245" lat="55.68723">
+      <name>Dronning Louises Bro</name>
+    </rtept>
+    <rtept lon="12.56377" lat="55.68672">
+      <name>Finish</name>
+    </rtept>
+  </rte>
+</gpx>

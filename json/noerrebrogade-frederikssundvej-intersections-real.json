@@ -1,0 +1,211 @@
+{
+  "intxns": {
+    "i01" : {
+      "name" : "Tomsgårdsvej-Frederikssundvej",
+      "id" : "18.01",
+      "loc" : {
+        "lat" : 55.70602,
+        "lon" : 12.52162
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 10 },
+        "s02" : { "type" : "regular", "course" : 110 },
+        "s03" : { "type" : "regular", "course" : 191 },
+        "s04" : { "type" : "regular", "course" : 282 }
+      }
+    },
+    "i02" : {
+      "name" : "Nørrebrogade-Dosseringen",
+      "id" : "18.01",
+      "loc" : {
+        "lat" : 55.687262,
+        "lon" : 12.562432
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 33 },
+        "s02" : { "type" : "regular", "course" : 121 },
+        "s03" : { "type" : "regular", "course" : 207 },
+        "s04" : { "type" : "regular", "course" : 303 }
+      }
+    },
+    "i03" : {
+      "name" : "Nørrebrogade-Fælledvej",
+      "id" : "18.02",
+      "loc" : {
+        "lat" : 55.688327,
+        "lon" : 12.559644
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 11 },
+        "s02" : { "type" : "regular", "course" : 117 },
+        "s03" : { "type" : "regular", "course" : 297 }
+      }
+    },
+    "i04" : {
+      "name" : "Nørrebrogade-Elmegade",
+      "id" : "18.03",
+      "loc" : {
+        "lat" : 55.689162,
+        "lon" : 12.557432
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 33 },
+        "s02" : { "type" : "regular", "course" : 123 },
+        "s03" : { "type" : "regular", "course" : 213 },
+        "s04" : { "type" : "regular", "course" : 303 }
+      }
+    },
+    "i05" : {
+      "name" : "Nørrebrogade-Kapelvej",
+      "id" : "18.04",
+      "loc" : {
+        "lat" : 55.690552,
+        "lon" : 12.554593
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 45 },
+        "s02" : { "type" : "regular", "course" : 132 },
+        "s03" : { "type" : "regular", "course" : 212 },
+        "s04" : { "type" : "regular", "course" : 318 }
+      }
+    },
+    "i06" : {
+      "name" : "Nørrebrogade-Sjællandsgade",
+      "id" : "18.05",
+      "loc" : {
+        "lat" : 55.692653,
+        "lon" : 12.551407
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 49 },
+        "s02" : { "type" : "regular", "course" : 138 },
+        "s03" : { "type" : "regular", "course" : 318 }
+      }
+    },
+    "i07" : {
+      "name" : "Nørrebrogade-Jagtvej (Runddelen)",
+      "id" : "18.06",
+      "loc" : {
+        "lat" : 55.694344,
+        "lon" : 12.548839
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 40 },
+        "s02" : { "type" : "regular", "course" : 144 },
+        "s03" : { "type" : "regular", "course" : 216 },
+        "s04" : { "type" : "regular", "course" : 313 }
+      }
+    },
+    "i08" : {
+      "name" : "Nørrebrogade-Borgmestervangen",
+      "id" : "19.04",
+      "loc" : {
+        "lat" : 55.700509,
+        "lon" : 12.539161
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 35 },
+        "s02" : { "type" : "regular", "course" : 125 },
+        "s03" : { "type" : "regular", "course" : 215 },
+        "s04" : { "type" : "regular", "course" : 305 }
+      }
+    },
+    "i09" : {
+      "name" : "Frederikssundvej-Lygten",
+      "id" : "19.06",
+      "loc" : {
+        "lat" : 55.701159,
+        "lon" : 12.537276
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 93 },
+        "s02" : { "type" : "regular", "course" : 195 },
+        "s03" : { "type" : "regular", "course" : 286 },
+        "s04" : { "type" : "regular", "course" : 352 }
+      }
+    },
+    "i10" : {
+      "name" : "Frederikssundvej-Frederiksborgvej-Vibevej",
+      "id" : "19.07",
+      "loc" : {
+        "lat" : 55.701851,
+        "lon" : 12.533335
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 27 },
+        "s02" : { "type" : "regular", "course" : 104 },
+        "s03" : { "type" : "regular", "course" : 206 },
+        "s04" : { "type" : "regular", "course" : 302 }
+      }
+    },
+    "i11" : {
+      "name" : "Frederikssundvej-Mågevej",
+      "id" : "19.08",
+      "loc" : {
+        "lat" : 55.703377,
+        "lon" : 12.529418
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 43 },
+        "s02" : { "type" : "regular", "course" : 127 },
+        "s03" : { "type" : "regular", "course" : 216 },
+        "s04" : { "type" : "regular", "course" : 306 }
+      }
+    },
+    "i12" : {
+      "name" : "Frederikssundvej-Uglevej",
+      "id" : "19.10",
+      "loc" : {
+        "lat" : 55.704574,
+        "lon" : 12.526493
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 34 },
+        "s02" : { "type" : "regular", "course" : 125 },
+        "s03" : { "type" : "regular", "course" : 219 },
+        "s04" : { "type" : "regular", "course" : 305 }
+      }
+    },
+    "i13" : {
+      "name" : "Nørrebrogade-Stefansgade",
+      "id" : "19.11",
+      "loc" : {
+        "lat" : 55.696782,
+        "lon" : 12.545150
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 48 },
+        "s02" : { "type" : "regular", "course" : 138 },
+        "s03" : { "type" : "regular", "course" : 207 },
+        "s04" : { "type" : "regular", "course" : 317 }
+      }
+    },
+    "i14" : {
+      "name" : "Nørrebrogade-Hillerødgade",
+      "id" : "19.12",
+      "loc" : {
+        "lat" : 55.697670,
+        "lon" : 12.543793
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 138 },
+        "s02" : { "type" : "regular", "course" : 229 },
+        "s03" : { "type" : "regular", "course" : 318 }
+      }
+    },
+    "i15" : {
+      "name" : "Nørrebrogade-Hillerødgade",
+      "id" : "19.14",
+      "loc" : {
+        "lat" : 55.699045,
+        "lon" : 12.541738
+      },
+      "sigs" : {
+        "s01" : { "type" : "regular", "course" : 48 },
+        "s02" : { "type" : "regular", "course" : 138 },
+        "s03" : { "type" : "regular", "course" : 216 },
+        "s03" : { "type" : "regular", "course" : 318 }
+      }
+    }
+  }
+}

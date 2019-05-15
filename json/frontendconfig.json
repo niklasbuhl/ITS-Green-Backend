@@ -1,0 +1,36 @@
+{
+  "startLat" : 55.73,
+  "startLon" : 12.39,
+  "accessToken" : "pk.eyJ1IjoibmlidWgiLCJhIjoiY2p1OXZ4ajdmMHZhZjN6cGR4NTZpajZzMiJ9.6dzIOnRPtBwMpYR7s29W9A",
+  "fps" : 2,
+  "debug" : {
+    "url" : false,
+    "looping" : false,
+    "simulation" : true,
+    "signal" : true,
+    "intersection" : true,
+    "intersectioncolors" : true
+  },
+  "loop" : {
+    "allIntxns" : {
+      "run" : false,
+      "dataTimer" : 2000,
+      "displayTimer" : 100
+    },
+    "sessionSignals": {
+      "run" : false,
+      "dataTimer" : 2000,
+      "displayTimer" : 100
+    },
+    "nextSignal" : {
+      "run" : false,
+      "dataTimer" : 2000,
+      "displayTimer" : 100
+    },
+    "bicycle" : {
+      "run" : true,
+      "dataTimer" : 2000,
+      "updateTimer" : 500
+    }
+  }
+}

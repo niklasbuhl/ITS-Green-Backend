@@ -1,1032 +1,177 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-// Modules
-require('leaflet-rotatedmarker'); // https://github.com/bbecquet/Leaflet.RotatedMarker
-
+// -----------------------------------------------------------------------------
 // jQuery
+// -----------------------------------------------------------------------------
+
 var $ = require('jquery');
 
-var name = "Niklas";
-
-// Get configuration
-CONFIG = require('./json/frontendconfig.json');
-API = require('./json/api.json');
-
-// Simulation
-const Signal = require('./javascript/signal.js');
-const Intersection = require('./javascript/intersection.js');
-const Simulation = require('./javascript/simulation.js');
-
-// Session
-const Bicycle = require('./javascript/bicycle.js');
-const Route = require('./javascript/route.js');
-const Session = require('./javascript/session.js');
-
-// const Visualization = require('./javascript/visualization.js');
-
 // -----------------------------------------------------------------------------
-// Hello World
+// Icons
 // -----------------------------------------------------------------------------
 
-console.log("Hello, World! V0.0.1");
+var CarStraightIcon = L.Icon.extend({
+      options: {
+        iconSize:     [100, 100],
+        iconAnchor:   [72, 120]
+      }
+    }),
+
+    carStraightIconRed = new CarStraightIcon({ iconUrl: './static/media/car-red-straight.png'}),
+    carStraightIconOrange = new CarStraightIcon({ iconUrl: './static/media/car-orange-straight.png'}),
+    carStraightIconGreen = new CarStraightIcon({ iconUrl: './static/media/car-green-straight.png'}),
+    carStraightIconYellow = new CarStraightIcon({ iconUrl: './static/media/car-yellow-straight.png'}),
+    carStraightIconGrey = new CarStraightIcon({ iconUrl: './static/media/car-grey-straight.png'}),
+
+    CarRightIcon = L.Icon.extend({
+      options: {
+        iconSize:     [100, 100],
+        iconAnchor:   [72, 120]
+      }
+    }),
+
+    carRightIconRed = new CarRightIcon({ iconUrl: './static/media/car-red-right.png'}),
+    carRightIconOrange = new CarRightIcon({ iconUrl: './static/media/car-orange-right.png'}),
+    carRightIconGreen = new CarRightIcon({ iconUrl: './static/media/car-green-right.png'}),
+    carRightIconYellow = new CarRightIcon({ iconUrl: './static/media/car-yellow-right.png'}),
+    carRightIconGrey = new CarRightIcon({ iconUrl: './static/media/car-grey-right.png'}),
+
+    BicycleStraightIcon = L.Icon.extend({
+      options: {
+        iconSize:     [100, 100],
+        iconAnchor:   [72, 120]
+      }
+    }),
+
+    bicycleStraightIconRed = new BicycleStraightIcon({ iconUrl: './static/media/bicycle-red-straight.png'}),
+    bicycleStraightIconOrange = new BicycleStraightIcon({ iconUrl: './static/media/bicycle-orange-straight.png'}),
+    bicycleStraightIconGreen = new BicycleStraightIcon({ iconUrl: './static/media/bicycle-green-straight.png'}),
+    bicycleStraightIconYellow = new BicycleStraightIcon({ iconUrl: './static/media/bicycle-yellow-straight.png'}),
+    bicycleStraightIconGrey = new BicycleStraightIcon({ iconUrl: './static/media/bicycle-grey-straight.png'}),
+
+    BicycleRightIcon = L.Icon.extend({
+      options: {
+        iconSize:     [100, 100],
+        iconAnchor:   [72, 120]
+      }
+    }),
+
+    bicycleRightIconRed = new BicycleRightIcon({ iconUrl: './static/media/bicycle-red-right.png'}),
+    bicycleRightIconOrange = new BicycleRightIcon({ iconUrl: './static/media/bicycle-orange-right.png'}),
+    bicycleRightIconGreen = new BicycleRightIcon({ iconUrl: './static/media/bicycle-green-right.png'}),
+    bicycleRightIconYellow = new BicycleRightIcon({ iconUrl: './static/media/bicycle-yellow-right.png'}),
+    bicycleRightIconGrey = new BicycleRightIcon({ iconUrl: './static/media/bicycle-grey-right.png'});
+
+const TYPE = {
+  CAR_S : 'CAR_S',
+  CAR_R : 'CAR_R',
+  BIKE_S : 'BIKE_S',
+  BIKE_R : 'BIKE_R'
+};
+
+const COLOR = {
+  RED: 'RED',
+  ORANGE: 'ORANGE',
+  GREEN: 'GREEN',
+  YELLOW: 'YELLOW',
+  GREY: 'GREY'
+};
+
+var CAR_S = new Map();
+
+CAR_S.set(COLOR.RED,    carStraightIconRed);
+CAR_S.set(COLOR.ORANGE, carStraightIconOrange);
+CAR_S.set(COLOR.GREEN,  carStraightIconGreen);
+CAR_S.set(COLOR.YELLOW, carStraightIconYellow);
+CAR_S.set(COLOR.GREY,   carStraightIconGrey);
+
+var CAR_R = new Map();
+
+CAR_R.set(COLOR.RED,    carRightIconRed);
+CAR_R.set(COLOR.ORANGE, carRightIconOrange);
+CAR_R.set(COLOR.GREEN,  carRightIconGreen);
+CAR_R.set(COLOR.YELLOW, carRightIconYellow);
+CAR_R.set(COLOR.GREY,   carRightIconGrey);
+
+var BIKE_S = new Map();
+
+BIKE_S.set(COLOR.RED,     bicycleStraightIconRed);
+BIKE_S.set(COLOR.ORANGE,  bicycleStraightIconOrange);
+BIKE_S.set(COLOR.GREEN,   bicycleStraightIconGreen);
+BIKE_S.set(COLOR.YELLOW,  bicycleStraightIconYellow);
+BIKE_S.set(COLOR.GREY,    bicycleStraightIconGrey);
+
+var BIKE_R = new Map();
+
+BIKE_R.set(COLOR.RED,     bicycleRightIconRed);
+BIKE_R.set(COLOR.ORANGE,  bicycleRightIconOrange);
+BIKE_R.set(COLOR.GREEN,   bicycleRightIconGreen);
+BIKE_R.set(COLOR.YELLOW,  bicycleRightIconYellow);
+BIKE_R.set(COLOR.GREY,    bicycleRightIconGrey);
+
+var ICON = new Map();
+
+ICON.set(TYPE.CAR_S, CAR_S);
+ICON.set(TYPE.CAR_R, CAR_R);
+ICON.set(TYPE.BIKE_S, BIKE_S);
+ICON.set(TYPE.BIKE_R, BIKE_R);
 
 // -----------------------------------------------------------------------------
-// Getting the base URL, for further use in the application
-// -----------------------------------------------------------------------------
-
-var protocol = window.location.protocol;
-var host = window.location.host;
-var baseURL = protocol + "//" + host;
-if (CONFIG.debug.url) console.log(baseURL);
-
-// -----------------------------------------------------------------------------
-// Load the map
-// -----------------------------------------------------------------------------
-
-var map = L.map('map-container').setView([CONFIG.startLat, CONFIG.startLon], 13);
-
-L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox.streets',
-    accessToken: CONFIG.accessToken
-}).addTo(map);
-
-// -----------------------------------------------------------------------------
-// Signal Icons
-// -----------------------------------------------------------------------------
-
-// var vis = new Visualization();
-
-// if (CONFIG.debug.intersectioncolors) vis.displayIntersectionColors(map);
-
-displayIntersectionColors(map);
-
-// -----------------------------------------------------------------------------
-// Bicycle Icons
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// Intersection Icons
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// Get data from backend
-// -----------------------------------------------------------------------------
-
-// function getJSON(path, callback) {
 //
-//   $.getJSON(path, function(response) {
-//     // console.log("Response:" + response);
-//     callback(response);
-//   });
-//
-// }
-//
-// function get(path, callback) {
-//
-//   $.get(
-//       path,
-//       // {paramOne : 1, paramX : 'abc'},
-//       {},
-//       function(data) {
-//          console.log('Data: ' + data);
-//          callback(data);
-//       }
-//   );
-//
-// }
-
-
-// -----------------------------------------------------------------------------
-// Simulation
 // -----------------------------------------------------------------------------
 
-var sim = new Simulation();
+function displayIntersectionColors(map) {
 
-var sesh = new Session();
+  var carStraightRed = L.marker([55.73, 12.39], {icon: carStraightIconRed, rotationAngle: 0}).addTo(map);
+  var carStraightOrange = L.marker([55.73, 12.39], {icon: carStraightIconOrange, rotationAngle: 90}).addTo(map);
+  var carStraightGreen = L.marker([55.73, 12.39], {icon: carStraightIconGreen, rotationAngle: 180}).addTo(map);
+  var carStraightYellow = L.marker([55.73, 12.39], {icon: carStraightIconYellow, rotationAngle: 270}).addTo(map);
+
+  var carRightRed = L.marker([55.73, 12.39], {icon: carRightIconRed, rotationAngle: 0}).addTo(map);
+  var carRightOrange = L.marker([55.73, 12.39], {icon: carRightIconOrange, rotationAngle: 90}).addTo(map);
+  var carRightGreen = L.marker([55.73, 12.39], {icon: carRightIconGreen, rotationAngle: 180}).addTo(map);
+  var carRightYellow = L.marker([55.73, 12.39], {icon: carRightIconYellow, rotationAngle: 270}).addTo(map);
+
+  var bicycleStraightRed = L.marker([55.73, 12.39], {icon: bicycleStraightIconRed, rotationAngle: 0}).addTo(map);
+  var bicycleStraightOrange = L.marker([55.73, 12.39], {icon: bicycleStraightIconOrange, rotationAngle: 90}).addTo(map);
+  var bicycleStraightGreen = L.marker([55.73, 12.39], {icon: bicycleStraightIconGreen, rotationAngle: 180}).addTo(map);
+  var bicycleStraightYellow = L.marker([55.73, 12.39], {icon: bicycleStraightIconYellow, rotationAngle: 270}).addTo(map);
+
+  var bicycleRightRed = L.marker([55.73, 12.39], {icon: bicycleRightIconRed, rotationAngle: 0}).addTo(map);
+  var bicycleRightOrange = L.marker([55.73, 12.39], {icon: bicycleRightIconOrange, rotationAngle: 90}).addTo(map);
+  var bicycleRightGreen = L.marker([55.73, 12.39], {icon: bicycleRightIconGreen, rotationAngle: 180}).addTo(map);
+  var bicycleRightYellow = L.marker([55.73, 12.39], {icon: bicycleRightIconYellow, rotationAngle: 270}).addTo(map);
+
+}
 
 // -----------------------------------------------------------------------------
-// Setup
+// Get Data from Backend
 // -----------------------------------------------------------------------------
 
-// Variables
-// var runLoop;
-// var updateTimer = 1000 / CONFIG.fps;
-var setupDone = false;
+function getJSON(path, callback) {
 
-function setup() {
-
-  console.log("Starting setup...");
-
-  var path = baseURL + API.sim.getIntxns.url;
-
-  console.log("Intersections path: "+path+".")
-
-  // get(path, function(data) {console.log(data);});
-
-  $.get(path, function(data) {
-
-    sim.loadIntersectionsAndSignals(data);
-
-    // console.log(data);
-
-    // sim.listAllIntersectionsAndSignals();
-
-    // sim.displayAllIntxns(map);
-
-    sim.displayAllSignals(map);
-
+  $.getJSON(path,
+    param,
+    function(response) {
+    // console.log("Response:" + response);
+    callback(response);
   });
 
-  path = baseURL + API.session.getRoute.url;
-
-  $.get(path, function(data) {
-
-    console.log(data);
-
-    sesh.addRoute('r01', data, map);
-
-    // var polyline = L.polyline(data, {color: 'red'}).addTo(map);
-
-  });
-
-  path = baseURL + API.session.getSignals.url;
-
-  $.get(path, function(data) {
-
-    console.log(data);
-
-    sesh.addSignals(data, map);
-
-    sesh.listSignals();
-
-    // Color all the signals blue
-    sim.activateSignals(sesh.signals);
-
-    sesh.displayIntersections(sim, map);
-
-    sesh.displayNextIntxn('i09');
-
-  });
-
-  sesh.addBicycle('b01', 55.686584, 12.564102, 300, map);
-
-
-
-  // get();
-  // getJSON(baseURL + API.sim.getIntxns.url);
-
-  console.log("Starting Done!");
-
 }
 
-// -----------------------------------------------------------------------------
-// Get Data Loops
-// -----------------------------------------------------------------------------
-
-var getDataAllIntxnsLooper;
-var getDataSessionSignalsLooper;
-var getDataNextSignalLooper;
-var getDataBicycleLooper;
-
-function getAllIntxnsData() {
-
-  console.log("Getting All Intersections Data");
-
-  // // Update All Signals
-  // if (sim.intersectionsLoaded) {
-  //
-  //   // sim.updateAllSignals();
-  //
-  //   for (var int of sim.intxns.values()) {
-  //
-  //     for (var sig of int.signals.values()) {
-  //
-  //       $.get(
-  //         API.sim.getSignalState,
-  //         {'intxnid' : int.id, 'sigid' : sig.id},
-  //         function(data) {
-  //
-  //           sim.setSignalState(data.intId, data.sigId, data.state);
-  //
-  //       });
-  //     }
-  //   }
-  // }
-
-  getDataAllIntxnsLooper = setTimeout(getAllIntxnsData, CONFIG.loop.allIntxns.dataTimer);
-
-}
-
-// Update Session Signals Loop
-
-function getSessionSignalsData() {
-
-  console.log("Getting Session Signals Data");
-
-  getDataSessionSignalsLooper = setTimeout(getSessionSignalsData, CONFIG.loop.sessionSignals.dataTimer);
-
-}
-
-// Update Next Signal Loop
-function getNextSignalData() {
-
-  console.log("Getting Next Signal Data");
-
-  getDataNextSignalLooper = setTimeout(getNextSignalData, CONFIG.loop.bicycle.dataTimer);
-}
-
-// Bicycle Loop
-function getBicycleData() {
-
-  console.log("Getting Bicycle Data");
+function get(path, param, callback) {
 
   $.get(
-    API.session.getBicycle,
-    // {'intxnid' : int.id, 'sigid' : sig.id},
-    function(data) {
-
-      console.log(data);
-      // sim.setSignalState(data.intId, data.sigId, data.state);
-      var time = data.time;
-      var lat = data.latitude;
-      var lon = data.longitude;
-      var speed = data.speed;
-      var course = data.course;
-
-      sesh.bicycle.setData(time, lat, lon, course, speed);
-
-  });
-
-  getDataBicycleLooper = setTimeout(getBicycleData, CONFIG.loop.bicycle.dataTimer);
-
-  setupDone = true;
-
-}
-
-// -----------------------------------------------------------------------------
-// Display Loops
-// -----------------------------------------------------------------------------
-
-var updateBicycleLooper;
-
-function updateBicycleLoop() {
-
-  sesh.bicycle.update();
-
-  updateBicycleLooper = setTimeout(updateBicycleLoop, CONFIG.loop.bicycle.updateTimer);
-
-}
-
-
-// -----------------------------------------------------------------------------
-// Start Loops
-// -----------------------------------------------------------------------------
-
-function startLoops() {
-
-  if (CONFIG.loop.allIntxns.run) {
-    console.log("Starting All Intersections Loop");
-    getAllIntxnsData();
-  }
-
-  if (CONFIG.loop.sessionSignals.run) {
-    console.log("Starting Session Signals Loop");
-    getSessionSignalsData();
-  }
-
-  if (CONFIG.loop.nextSignal.run) {
-    console.log("Starting Next Signal Loop");
-    getNextSignalData();
-  }
-
-  if (CONFIG.loop.bicycle.run) {
-    console.log("Starting Bicycle Loop");
-    getBicycleData();
-    updateBicycleLoop();
-
-  }
-
-  // Looping
-  // if (CONFIG.debug.looping) console.log("Looping'");
-  // runLoop = setTimeout(loop, updateTimer);
-
-}
-
-// -----------------------------------------------------------------------------
-// Execute
-// -----------------------------------------------------------------------------
-
-$(document).ready(setup());
-
-while(!setupDone) {
-  $(document).ready(startLoops());
-}
-
-},{"./javascript/bicycle.js":2,"./javascript/intersection.js":3,"./javascript/route.js":4,"./javascript/session.js":5,"./javascript/signal.js":6,"./javascript/simulation.js":7,"./json/api.json":8,"./json/frontendconfig.json":9,"jquery":10,"leaflet-rotatedmarker":11}],2:[function(require,module,exports){
-// -----------------------------------------------------------------------------
-// Bicycle
-// -----------------------------------------------------------------------------
-
-class Bicycle {
-
-  constructor(id, lat, lon, course, speed) {
-
-    console.log("Creating new Bicycle.");
-
-    // Input Variables
-    this.id = id;
-
-    this.lat = lat;
-    this.nextLat = lat;
-    this.incLat = 0;
-    this.difLat = 0;
-
-    this.lon = lon;
-    this.nextLon = lon;
-    this.incLon = 0;
-    this.difLon = 0;
-
-    this.cor = course;
-    this.nextCor = course;
-    this.incCor = 0;
-    this.difCor = 0;
-
-    this.speed = speed;
-    this.lastUpdate = 0;
-
-    // this.centerMarker = L.marker([lat, lon], {
-    //   rotationAngle: course
-    // });
-
-    this.marker = L.marker([lat, lon], {
-      icon: bicycleIcon,
-      rotationAngle: course
-    });
-
-    console.log("Placing bicycle["+id+"]: ["+lat+", "+lon+"] heading "+course+".");
-
-  }
-
-  display(map) {
-    console.log("Displaying Bicycle["+this.id+"].");
-    this.marker.addTo(map);
-    // this.centerMarker.addTo(map);
-  }
-
-  update() {
-
-    // Get difference
-    this.difLat = this.lat - this.nextLat;
-    this.difLon = this.lon - this.nextLon;
-    this.difCor = this.cor - this.nextCourse;
-
-    // Continue
-    var c = true;
-
-    if (this.difLat == 0) { this.incLat = 0; } else { c = false; }
-    if (this.difLon == 0) { this.incLon = 0; } else { c = false; }
-    if (this.difCor == 0) { this.incCor = 0; } else { c = false; }
-
-    if (c) { return; }
-
-    // Update numbers
-    this.cor = (this.cor + this.incCor) % 360;
-    this.lat = this.lat + this.incLat;
-    this.lon = this.lon + this.incLon;
-
-    // Update Marker
-    this.marker.setLatLng([this.lat, this.lon]);
-    this.marker.setRotationAngle(this.course);
-
-    // Make sure it does not go out of bounds.
-    if (Math.abs(this.difLat) < Math.abs(this.incLat)) { this.incLat = this.difLab; }
-    if (Math.abs(this.difLon) < Math.abs(this.incLon)) { this.incLon = this.difLon; }
-    if (Math.abs(this.difCor) < Math.abs(this.incCor)) { this.incCor = this.difCor; }
-
-  }
-
-  setData(time, lat, lon, course, speed) {
-
-    console.log("Updating bicycle!");
-    var incrementCount = Math.ceil(CONFIG.loop.bicycle.dataTimer / CONFIG.loop.bicycle.updateTimer) - 1;
-    if (incrementCount < 1) { incrementCount = 1; }
-    console.log("incrementCount: " + incrementCount);
-
-    this.lastUpdate = time;
-
-    // Latitude
-    this.nextLat = lat;
-    this.difLat = this.nextLat - this.lat;
-    this.incLat = this.difLat / incrementCount;
-
-    console.log("Lat Now: " + this.lat);
-    console.log("Lat Next: " + this.nextLat);
-    console.log("Lat Dif: " + this.difLat);
-    console.log("Lat Inc: " + this.incLat);
-
-    // Longitude
-    this.nextLon = lon;
-    this.difLon = this.nextLon - this.lon;
-    this.incLon = this.difLon / incrementCount;
-
-    console.log("Lon Now: " + this.lon);
-    console.log("Lon Next: " + this.nextLon);
-    console.log("Lon Dif: " + this.difLon);
-    console.log("Lon Inc: " + this.incLon);
-
-    // Speed
-    this.speed = speed;
-
-    // Course
-    this.nextCor = course;
-    this.difCor = this.nextCor - this.cor;
-
-    console.log("Cor Now: " + this.cor);
-    console.log("Cor Next: " + this.nextCor);
-    console.log("Cor Dif1: " + this.difCor);
-
-    // If the change is more than 180, go the other way.
-    if (this.difCor > 180) { this.difCor = 360 - this.difCor; }
-
-    // If the change is less than -180, go the other way.
-    if (this.difCor < -180) { this.difCor = -360 - this.difCor; }
-
-    this.incCor = this.difCor / incrementCount;
-
-    console.log("Cor Dif2: " + this.difCor);
-    console.log("Cor Inc: " + this.incLon);
-
-
-  }
-};
-
-module.exports = Bicycle;
-
-},{}],3:[function(require,module,exports){
-const Signal = require('./signal.js');
-// const Visualization = require('./javascript/visualization.js');
-
-// -----------------------------------------------------------------------------
-// Intersection
-// -----------------------------------------------------------------------------
-
-class Intersection {
-
-  constructor(id, lat, lon) {
-
-    if(CONFIG.debug.intersection) console.log("Creating new Intersection ["+id+"].");
-
-    // Input variables
-    this.id = id;
-    this.loc = {lat: lat, lon: lon};
-    this.marker = L.marker([this.loc.lat, this.loc.lon], {
-      rotationAngle: 0,
-      draggable: false
-    });
-
-    // Signals
-    this.signals = new Map();
-
-  }
-
-  addSignal(id, course) {
-
-    if (CONFIG.debug.intersection) console.log("Adding new signal to intersection.");
-
-    this.signals.set(id, new Signal(this.id, id, course, this.loc));
-
-  }
-
-  displayIntersection(map) {
-
-    this.marker.addTo(map);
-
-  }
-
-  displaySignals(map) {
-
-    for (var sig of this.signals.values()) {
-
-      sig.display(map);
-
-    }
-  }
-
-  setSignalState(sigId, state, opacity) {
-
-    // console.log(this.signals.get(sigId));
-
-    this.signals.get(sigId).setState(state, opacity);
-
-
-  }
-};
-
-module.exports = Intersection;
-
-},{"./signal.js":6}],4:[function(require,module,exports){
-// -----------------------------------------------------------------------------
-// Route
-// -----------------------------------------------------------------------------
-
-class Route {
-
-  constructor(id, array) {
-
-    // Input Variables
-    console.log("Creating new Route ["+id+"].");
-    this.id = id;
-
-    // Route Variables
-    this.route = array;
-    // something to mark the route...
-    // this.routeLoaded = false;
-    // this.routeDisplayed = false;
-    // this.routeUpdate = false;
-
-    this.polyline = L.polyline(this.route, {color: 'blue'});
-
-  }
-
-  display(map) {
-
-    this.polyline.addTo(map);
-
-  }
-
-
-};
-
-module.exports = Route;
-
-},{}],5:[function(require,module,exports){
-const Route = require('./route.js');
-const Bicycle = require('./bicycle.js');
-
-// -----------------------------------------------------------------------------
-// Session
-// -----------------------------------------------------------------------------
-
-class Session {
-
-  constructor(id) {
-
-    console.log("Starting new Session.");
-    // this.id = id;
-
-    this.intxns = [];
-    this.intxnCircles = new Map();
-    this.nextInt = '';
-    this.nextIntSet = false;
-
-  }
-
-  addRoute(id, pointArray, map) {
-
-    this.route = new Route(id, pointArray);
-    this.route.display(map);
-
-  }
-
-  addBicycle(bikeId, lat, lon, course, map) {
-
-    this.bicycle = new Bicycle(bikeId, lat, lon, course);
-    this.bicycle.display(map);
-
-  }
-
-  addSignals(signalsArray) {
-
-    this.signals = signalsArray;
-
-    var n = this.signals.length;
-
-    for(var i = 0; i < n; i++) {
-
-      console.log(this.signals[i]);
-
-      this.intxns.push(this.signals[i][0]);
-
-    }
-
-  }
-
-  listSignals() {
-
-    console.log("Signals in this session.");
-
-    var n = this.signals.length;
-
-    for(var i = 0; i < n; i++) {
-
-      console.log("Intersection["+this.signals[i][0]+"] Signal["+this.signals[i][1]+"]");
-
-      console.log(this.signals[i]);
-
-    }
-
-  }
-
-  displayIntersections(sim, map) {
-
-    var n = this.intxns.length;
-
-    for(var i = 0; i < n; i++) {
-
-      var id = this.intxns[i];
-      console.log(id);
-
-      // console.log(sim.intxns.get(this.intxns[i]));
-
-      var lat = sim.intxns.get(this.intxns[i]).loc.lat;
-      var lon = sim.intxns.get(this.intxns[i]).loc.lon;
-
-      console.log(lat);
-      console.log(lon);
-
-      // this.intxnCircles.push(L.circle([lat, lon], {
-      //   opacity: 0.5,
-      //   radius: 40
-      // }).addTo(map));
-
-      this.intxnCircles.set(id, (L.circle([lat, lon], {
-        color: '#3388ff',
-        opacity: 0.5,
-        fillOpacity: 0.0,
-        radius: 40
-      }).addTo(map)));
-
-    }
-  }
-
-  displayNextIntxn(int) {
-
-    if (!this.nextIntSet) this.nextInt = int;
-
-    console.log(this.nextInt);
-    console.log(int);
-
-    console.log(this.intxnCircles.get(this.nextInt));
-
-    // Reset previous
-    this.intxnCircles.get(this.nextInt).setStyle({
-      opacity: 0.5,
-      fillOpacity: 0.0,
-      color: '#3388ff'
-    });
-
-    // Update next int variable
-    this.nextInt = int;
-
-    // Set next
-    this.intxnCircles.get(this.nextInt).setStyle({
-      opacity: 1,
-      fillOpacity : 0.2,
-      color: '#00FF00'
-    });
-
-    this.nextIntSet = true;
-
-
-  }
-
-};
-
-module.exports = Session;
-
-},{"./bicycle.js":2,"./route.js":4}],6:[function(require,module,exports){
-// const Visualization = require('./javascript/visualization.js');
-
-// -----------------------------------------------------------------------------
-// Signal
-// -----------------------------------------------------------------------------
-
-class Signal {
-
-  constructor(intxnId, id, course, loc) {
-
-    if(CONFIG.debug.signal) console.log("Creating new Signal ["+id+"].");
-
-    // Input variables
-    this.intxnId = intxnId;
-    this.id = id;
-    this.course = course;
-    this.loc = loc;
-    this.type = TYPE.CAR_S;
-    this.color = STATE.INACTIVE;
-    this.active = false;
-
-    // Icon Marker
-    this.marker = new L.marker([loc.lat, loc.lon], {
-      icon : ICON.get(this.type).get(this.color),
-      rotationAngle : this.course,
-      opacity: 0.5
-    });
-
-  }
-
-  setIcon(type) {
-
-    this.type = type;
-
-  }
-
-  setState(state, opacity) {
-
-    // console.log("name");
-
-    // let param = {'intxnid' : this.intxnId, 'sigid' : this.id};
-    //
-    // $.get(API.sim.getSignalState, param, function(data) {
-    //   console.log(data);
-    // });
-
-    this.marker.setOpacity(opacity);
-
-    this.marker.setIcon(ICON.get(this.type).get(state));
-
-  }
-
-  display(map) {
-
-    this.marker.addTo(map);
-
-  }
-
-};
-
-module.exports = Signal;
-
-},{}],7:[function(require,module,exports){
-const Intersection = require('./intersection.js');
-// const Visualization = require('./javascript/visualization.js');
-
-// -----------------------------------------------------------------------------
-// Simulation
-// -----------------------------------------------------------------------------
-
-class Simulation {
-
-  constructor() {
-
-    if(CONFIG.debug.simulation) console.log("Creating new Simulation");
-
-    // Intersection
-    this.intxns = new Map()
-
-    this.intxnsLoaded = false;
-
-    this.intersectionsLoaded = false;
-
-  }
-
-  loadIntersectionsAndSignals(data) {
-
-    if(CONFIG.debug.simulation) console.log("Getting new simulation data");
-
-    if(CONFIG.debug.Simulation) console.log(data);
-
-    for(var intxn in data) {
-
-      // Id
-      if(CONFIG.debug.simulation) console.log("id: "+intxn+".");
-
-      // Lat
-      var lat = data[intxn]['lat'];
-      if(CONFIG.debug.simulation) console.log("lat: "+lat+".");
-
-      // Lon
-      var lon = data[intxn]['lon'];
-      if(CONFIG.debug.simulation) console.log("lon: "+lon+".");
-
-      var tempIntxn = new Intersection(intxn, lat, lon);
-
-      for(var signal in data[intxn]['signals']) {
-
-        // Id
-        if(CONFIG.debug.simulation) console.log("\tid:"+signal+".");
-
-        // Course
-        var course = data[intxn]['signals'][signal]['course'];
-        if(CONFIG.debug.simulation) console.log("\tcourse: "+course+".");
-
-        // Add signal to intersection
-        tempIntxn.addSignal(signal, course);
-
+      path,
+      // {paramOne : 1, paramX : 'abc'},
+      param,
+      function(data) {
+         console.log('Data: ' + data);
+         callback(data);
       }
-
-      this.intxns.set(intxn, tempIntxn);
-
-    }
-
-    this.intersectionsLoaded = true;
-
-  }
-
-  listAllIntersectionsAndSignals() {
-
-    if (!this.intersectionsLoaded) return;
-
-    console.log("\nListing all intersections.\n\n");
-    // if (CONFIG.debug.simulation) console.log(this.intxns);
-
-    for (var int of this.intxns.values()) {
-      // if (CONFIG.debug.simulation) console.log(int);
-      console.log("\tIntersection["+int.id+"]");
-      console.log("\tLat: "+int.loc.lat+".");
-      console.log("\tLon: "+int.loc.lon+".\n\n");
-
-
-      for (var sig of int.signals.values()) {
-        // if (CONFIG.debug.simulation) console.log(sig);
-        console.log("\t\tSignal["+sig.id+"]");
-        console.log("\t\tCourse: "+sig.course+".\n\n");
-
-      }
-    }
-
-  }
-
-  displayAllIntxns(map) {
-
-    if (!this.intersectionsLoaded) return;
-
-    if(CONFIG.debug.simulation) console.log("Displaying all intersections.\n\n");
-
-    for (var int of this.intxns.values()) {
-
-      int.displayIntersection(map);
-
-    }
-
-  }
-
-  displayAllSignals(map) {
-
-    if (!this.intersectionsLoaded) return;
-
-    if(CONFIG.debug.simulation) console.log("Displaying all signals.\n\n");
-
-    for (var int of this.intxns.values()) {
-
-      int.displaySignals(map);
-
-    }
-  }
-
-  setSignalState(intxnId, sigId, state, opacity) {
-
-    // console.log(this.intxns.get(intxnId));
-
-    this.intxns.get(intxnId).setSignalState(sigId, state, opacity);
-
-  }
-
-  activateSignals(signalsArray) {
-
-    var n = signalsArray.length;
-
-    for (var i = 0; i < n; i ++) {
-
-      this.setSignalState(signalsArray[i][0], signalsArray[i][1], STATE.ACTIVE, 0.5);
-
-    }
-
-  }
-};
-
-
-module.exports = Simulation;
-
-},{"./intersection.js":3}],8:[function(require,module,exports){
-module.exports={
-  "api" : {
-    "version" : "0.0.1"
-  },
-
-  "pages" : {
-    "hello" : "/",
-    "map" : "/map",
-    "control" : "/control/",
-    "color" : "/color/"
-  },
-
-  "sim" : {
-    "getIntxns" : {
-      "url" : "/api/sim/getintxnsn/"
-    },
-
-    "getSignalStateAll" : {
-      "url" : "/api/sim/getallss"
-    },
-
-    "getSignalStateSpecified" : {
-      "url" : "/api/sim/getspecss",
-      "args" : {
-        "signalArray" : "array"
-      }
-    },
-
-    "getSignalState" : {
-      "url" : "/api/sim/signal/getss/",
-      "args" : {
-        "intxnId" : "string",
-        "sigId" : "string"
-      }
-    },
-
-    "getSignalTTG" : {
-      "url" : "/api/sim/signal/ttg/",
-      "args" : {
-        "intxnId" : "string",
-        "sigId" : "string"
-      }
-    },
-
-    "start" : {
-      "url" : "/api/sim/start/"
-    },
-
-    "stop" : {
-      "url" : "/api/sim/stop/"
-    }
-
-  },
-
-  "session" : {
-
-    "setBicycle" : {
-      "url" : "/api/session/setbicycle/"
-    },
-
-    "getBicycle" : {
-      "url" : "/api/session/getbicycle/"
-    },
-    "getColor" : {
-      "url" : "/api/session/getcolor/"
-    },
-    "setRoute" : {
-      "url" : "/api/session/setroute/"
-    },
-
-    "getRoute" : {
-      "url" : "/api/session/getroute/"
-    },
-    "getSignals" : {
-      "url" : "/api/session/getsignals/"
-
-    },
-
-    "getIntxns" : {
-      "url" : "/api/session/getintxns/"
-    },
-
-    "getNextIntxn" : {
-      "url" : "/api/session/getnextintxn/"
-    }
-  }
+  );
 }
 
-},{}],9:[function(require,module,exports){
-module.exports={
-  "startLat" : 55.73,
-  "startLon" : 12.39,
-  "accessToken" : "pk.eyJ1IjoibmlidWgiLCJhIjoiY2p1OXZ4ajdmMHZhZjN6cGR4NTZpajZzMiJ9.6dzIOnRPtBwMpYR7s29W9A",
-  "fps" : 2,
-  "debug" : {
-    "url" : false,
-    "looping" : false,
-    "simulation" : true,
-    "signal" : true,
-    "intersection" : true,
-    "intersectioncolors" : true
-  },
-  "loop" : {
-    "allIntxns" : {
-      "run" : false,
-      "dataTimer" : 2000,
-      "displayTimer" : 100
-    },
-    "sessionSignals": {
-      "run" : false,
-      "dataTimer" : 2000,
-      "displayTimer" : 100
-    },
-    "nextSignal" : {
-      "run" : false,
-      "dataTimer" : 2000,
-      "displayTimer" : 100
-    },
-    "bicycle" : {
-      "run" : true,
-      "dataTimer" : 2000,
-      "updateTimer" : 500
-    }
-  }
-}
-
-},{}],10:[function(require,module,exports){
+},{"jquery":2}],2:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.4.1
  * https://jquery.com/
@@ -11625,64 +10770,5 @@ if ( !noGlobal ) {
 
 return jQuery;
 } );
-
-},{}],11:[function(require,module,exports){
-(function() {
-    // save these original methods before they are overwritten
-    var proto_initIcon = L.Marker.prototype._initIcon;
-    var proto_setPos = L.Marker.prototype._setPos;
-
-    var oldIE = (L.DomUtil.TRANSFORM === 'msTransform');
-
-    L.Marker.addInitHook(function () {
-        var iconOptions = this.options.icon && this.options.icon.options;
-        var iconAnchor = iconOptions && this.options.icon.options.iconAnchor;
-        if (iconAnchor) {
-            iconAnchor = (iconAnchor[0] + 'px ' + iconAnchor[1] + 'px');
-        }
-        this.options.rotationOrigin = this.options.rotationOrigin || iconAnchor || 'center bottom' ;
-        this.options.rotationAngle = this.options.rotationAngle || 0;
-
-        // Ensure marker keeps rotated during dragging
-        this.on('drag', function(e) { e.target._applyRotation(); });
-    });
-
-    L.Marker.include({
-        _initIcon: function() {
-            proto_initIcon.call(this);
-        },
-
-        _setPos: function (pos) {
-            proto_setPos.call(this, pos);
-            this._applyRotation();
-        },
-
-        _applyRotation: function () {
-            if(this.options.rotationAngle) {
-                this._icon.style[L.DomUtil.TRANSFORM+'Origin'] = this.options.rotationOrigin;
-
-                if(oldIE) {
-                    // for IE 9, use the 2D rotation
-                    this._icon.style[L.DomUtil.TRANSFORM] = 'rotate(' + this.options.rotationAngle + 'deg)';
-                } else {
-                    // for modern browsers, prefer the 3D accelerated version
-                    this._icon.style[L.DomUtil.TRANSFORM] += ' rotateZ(' + this.options.rotationAngle + 'deg)';
-                }
-            }
-        },
-
-        setRotationAngle: function(angle) {
-            this.options.rotationAngle = angle;
-            this.update();
-            return this;
-        },
-
-        setRotationOrigin: function(origin) {
-            this.options.rotationOrigin = origin;
-            this.update();
-            return this;
-        }
-    });
-})();
 
 },{}]},{},[1]);

@@ -3,8 +3,8 @@
     "i01" : {
       "name" : "Første Signal",
       "loc" : {
-        "lat" : 55.727573,
-        "lon" : 12.396438
+        "lat" : 55.73,
+        "lon" : 12.39
       },
       "sigs" : {
         "s01" : { "type" : "regular", "course" : 0 },
