@@ -159,22 +159,22 @@ def sessionSetBicycleLocation():
     print(content)
     print("\n")
 
-    # if CONFIG['debug']['setbicycle']: print("\nBicycle Update!\n")
-    #
-    # if CONFIG['debug']['setbicycle']: print("\tTime: " + str(content['time']))
-    # sesh.bicycle.setUpdated(content['time'])
-    #
-    # if CONFIG['debug']['setbicycle']: print("\tLat: " + str(content['latitude']))
-    # if CONFIG['debug']['setbicycle']: print("\tLon: " + str(content['longitude']))
-    # sesh.bicycle.setLocation(Location(content['latitude'], content['longitude']))
-    #
-    # if CONFIG['debug']['setbicycle']: print("\tSpeed: " + str(content['speed']))
-    # if content['speed'] != -1: sesh.bicycle.setSpeed(content['speed'])
-    #
-    # if CONFIG['debug']['setbicycle']: print("\tCourse: " + str(content['course']))
-    # sesh.bicycle.setCourse(content['course'])
-    #
-    # if CONFIG['debug']['setbicycle']: print("\n")
+    if CONFIG['debug']['setbicycle']: print("\nBicycle Update!\n")
+
+    if CONFIG['debug']['setbicycle']: print("\tTime: " + str(content['time']))
+    sesh.bicycle.setUpdated(content['time'])
+
+    if CONFIG['debug']['setbicycle']: print("\tLat: " + str(content['latitude']))
+    if CONFIG['debug']['setbicycle']: print("\tLon: " + str(content['longitude']))
+    sesh.bicycle.setLocation(Location(content['latitude'], content['longitude']))
+
+    if CONFIG['debug']['setbicycle']: print("\tSpeed: " + str(content['speed']))
+    if content['speed'] != -1: sesh.bicycle.setSpeed(content['speed'])
+
+    if CONFIG['debug']['setbicycle']: print("\tCourse: " + str(content['course']))
+    sesh.bicycle.setCourse(content['course'])
+
+    if CONFIG['debug']['setbicycle']: print("\n")
 
     # content = request.get_json(silent=True)
     # print(content) # Do your processing
