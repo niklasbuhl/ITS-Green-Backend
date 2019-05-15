@@ -1,7 +1,7 @@
 {
   "intxns": {
     "i01" : {
-      "name" : "Tomsgårdsvej-Frederikssundvej",
+      "name" : "Tomsgaardsvej-Frederikssundvej",
       "id" : "18.01",
       "loc" : {
         "lat" : 55.70602,
@@ -15,7 +15,7 @@
       }
     },
     "i02" : {
-      "name" : "Nørrebrogade-Dosseringen",
+      "name" : "Noerrebrogade-Dosseringen",
       "id" : "18.01",
       "loc" : {
         "lat" : 55.687262,
@@ -29,7 +29,7 @@
       }
     },
     "i03" : {
-      "name" : "Nørrebrogade-Fælledvej",
+      "name" : "Noerrebrogade-Faelledvej",
       "id" : "18.02",
       "loc" : {
         "lat" : 55.688327,
@@ -42,7 +42,7 @@
       }
     },
     "i04" : {
-      "name" : "Nørrebrogade-Elmegade",
+      "name" : "Noerrebrogade-Elmegade",
       "id" : "18.03",
       "loc" : {
         "lat" : 55.689162,
@@ -56,7 +56,7 @@
       }
     },
     "i05" : {
-      "name" : "Nørrebrogade-Kapelvej",
+      "name" : "Noerrebrogade-Kapelvej",
       "id" : "18.04",
       "loc" : {
         "lat" : 55.690552,
@@ -70,7 +70,7 @@
       }
     },
     "i06" : {
-      "name" : "Nørrebrogade-Sjællandsgade",
+      "name" : "Noerrebrogade-Sjaellandsgade",
       "id" : "18.05",
       "loc" : {
         "lat" : 55.692653,
@@ -83,7 +83,7 @@
       }
     },
     "i07" : {
-      "name" : "Nørrebrogade-Jagtvej (Runddelen)",
+      "name" : "Noerrebrogade-Jagtvej (Runddelen)",
       "id" : "18.06",
       "loc" : {
         "lat" : 55.694344,
@@ -97,7 +97,7 @@
       }
     },
     "i08" : {
-      "name" : "Nørrebrogade-Borgmestervangen",
+      "name" : "Noerrebrogade-Borgmestervangen",
       "id" : "19.04",
       "loc" : {
         "lat" : 55.700509,
@@ -139,7 +139,7 @@
       }
     },
     "i11" : {
-      "name" : "Frederikssundvej-Mågevej",
+      "name" : "Frederikssundvej-Maagevej",
       "id" : "19.08",
       "loc" : {
         "lat" : 55.703377,
@@ -167,7 +167,7 @@
       }
     },
     "i13" : {
-      "name" : "Nørrebrogade-Stefansgade",
+      "name" : "Noerrebrogade-Stefansgade",
       "id" : "19.11",
       "loc" : {
         "lat" : 55.696782,
@@ -181,7 +181,7 @@
       }
     },
     "i14" : {
-      "name" : "Nørrebrogade-Hillerødgade",
+      "name" : "Noerrebrogade-Hilleroedgade",
       "id" : "19.12",
       "loc" : {
         "lat" : 55.697670,
@@ -194,7 +194,7 @@
       }
     },
     "i15" : {
-      "name" : "Nørrebrogade-Hillerødgade",
+      "name" : "Noerrebrogade-Hilleroedgade",
       "id" : "19.14",
       "loc" : {
         "lat" : 55.699045,
