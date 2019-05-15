@@ -150,7 +150,10 @@ class Route:
                         point.longitude,
                     )
 
-                    if CONFIG['debug']['route']['findingSignals']: print(f"Point A [{prevPoint.latitude}, {point.longitude}] Point B [{point.latitude}, {prevPoint.longitude}], Distance {round(distance,2)}m. Courese {round(course,2)} degrees from north")
+                    # if CONFIG['debug']['route']['findingSignals']: print(f"Point A [{prevPoint.latitude}, {point.longitude}] Point B [{point.latitude}, {prevPoint.longitude}], Distance {round(distance,2)}m. Courese {round(course,2)} degrees from north")
+                    if CONFIG['debug']['route']['findingSignals']:
+                        message = "Point A [" + str(prevPoint.latitude) + ", " + str(point.longitude) + "], Point B [" + str(point.latitude) + ", " + str(prevPoint.longitude) + "], Distance " + str(round(distance,2)) + "m. Courese " + str(round(course,2)) + " degrees from north."
+                        print(message)
 
 
                     # Signals on this part of the route
@@ -173,11 +176,17 @@ class Route:
 
                                 intxnId = intxns[int].id
 
-                                if CONFIG['debug']['route']['findingSignals']: print(f"A: {intDistanceA}, B: {intDistanceA}")
+                                if CONFIG['debug']['route']['findingSignals']:
+                                    # print(f"A: {intDistanceA}, B: {intDistanceA}")
+                                    message = "A: " + str(intDistanceA) + ", B: " + str(intDistanceA)
+                                    print(message)
 
                                 bicycleCourse = (course - 180) % 360;
 
-                                if CONFIG['debug']['route']['findingSignals']: print(f"Bicycle course: {bicycleCourse}")
+                                if CONFIG['debug']['route']['findingSignals']:
+                                    # print(f"Bicycle course: {bicycleCourse}")
+                                    message = "Bicycle course: " + str(bicycleCourse) + "."
+                                    print(message)
 
 
 
@@ -185,17 +194,22 @@ class Route:
 
                                     signalCourse = intxns[int].signals[sig].course
 
-                                    if CONFIG['debug']['route']['findingSignals']: print(f"Sig Course: {signalCourse}")
+                                    if CONFIG['debug']['route']['findingSignals']:
+                                        # print(f"Sig Course: {signalCourse}")
+                                        message = "Sig Course: " + str(signalCourse)
+                                        print(message)
 
                                     if signalCourse - bicycleCourse < 45 and bicycleCourse - signalCourse < 45:
 
-                                        if CONFIG['debug']['route']['findingSignals']: print("This signal!")
+                                        if CONFIG['debug']['route']['findingSignals']:
+                                            print("This signal!")
 
                                         sigId = intxns[int].signals[sig].id
 
                                         sigIntId = intxnId+sigId
 
-                                        if CONFIG['debug']['route']['findingSignals']: print(sigIntId)
+                                        if CONFIG['debug']['route']['findingSignals']:
+                                            print(sigIntId)
 
                                         signal = RouteSignal(intxnId, sigId, intxns[int].getLocation(), 0)
 
@@ -205,21 +219,23 @@ class Route:
 
                                         foundSignals.append([sigIntId, SignalDistanceFromA])
 
-                    if CONFIG['debug']['route']['findingSignals']: print(foundSignals)
+                    if CONFIG['debug']['route']['findingSignals']:
+                        print(foundSignals)
 
                     foundSignals = sorted(foundSignals, key=itemgetter(1))
 
-                    if CONFIG['debug']['route']['findingSignals']: print(foundSignals)
+                    if CONFIG['debug']['route']['findingSignals']:
+                        print(foundSignals)
 
                     for signal in foundSignals:
-
                         self.sigsOnRoute.append(signal[0])
 
                     # Check signals of those intersections
 
 
 
-                if CONFIG['debug']['route']['findingSignals']: ('Point at ({0},{1}) -> {2}'.format(point.latitude, point.longitude, point.elevation))
+                if CONFIG['debug']['route']['findingSignals']:
+                    print('Point at ({0},{1}) -> {2}'.format(point.latitude, point.longitude, point.elevation))
 
                 prevPoint = point
                 firstPoint = False
@@ -246,7 +262,9 @@ class Route:
 
             #signal.n = i
 
-            print(f"[{sigId}]: {signal.intxnId}, {signal.sigId}, {signal.n}")
+            # print(f"[{sigId}]: {signal.intxnId}, {signal.sigId}, {signal.n}")
+            message = "[" + str(sigId) + "]: " + str(signal.intxnId) + ", " + str(signal.sigId) + ", " + str(signal.n)
+            print(message)
 
             #i += 1
 

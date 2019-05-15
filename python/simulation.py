@@ -91,12 +91,14 @@ class Signal(threading.Thread):
 
     def run(self):
 
-        if CONFIG['debug']['signal']: print(f"Starting signal")
+        if CONFIG['debug']['signal']:
+            print("Starting signal")
 
         while self.keepAlive:
             self.update()
 
-        if CONFIG['debug']['signal']: print(f"Exiting signal")
+        if CONFIG['debug']['signal']:
+            print("Exiting signal")
 
     def update(self):
 
@@ -111,7 +113,7 @@ class Signal(threading.Thread):
             return
 
         if CONFIG['debug']['signalTiming']:
-            print(f"[{self.intxnId}][{self.id}] TTG: {round((self.ttg / 1000), 1)}")
+            print('[{0}][{1}] TTG: {2}'.format(self.intxnId, self.id, round((self.ttg / 1000), 1)))
             # print(f"[{self.intxnId}][{self.id}] TSU: {timeSinceUpdate} - Time to update!")
 
         prevState = self.state
@@ -161,13 +163,15 @@ class Signal(threading.Thread):
         self.cycleInitOffset = random.randint(0, self.cycleTime)
 
     def print(self):
-        print(f"\tSignal[{self.id}]")
-        print(f"\t\tType: {self.type}")
-        print(f"\t\tCourse: {self.course}")
-        print(f"\t\tCycle Init: {self.cycleInitOffset}\n")
+        print('\tSignal[{0}]'.format(self.id))
+        print('\t\tType: {0}'.format(self.type))
+        print('\t\tCourse: {0}'.format(self.course))
+        print('\t\tCycle Init: {0}\n'.format(self.cycleInitOffset))
 
     def printState(self):
-        print(f"[{self.intxnId}][{self.id}] {self.state.name}")
+        message = "[" + str(self.intxnId) + "][" + str(self.id) + "] " + str(self.state.name)
+        # print(f"[{self.intxnId}][{self.id}] {self.state.name}")
+        print(message)
 
     def getState(self):
 
@@ -210,8 +214,13 @@ class Intersection:
             self.signals[sig].stop()
 
     def print(self):
-        print(f"\nIntersection[{self.id}] - {self.name}\n")
-        print(f"\tLoc: [{self.loc.lat}, {self.loc.lat}]\n")
+        # print(f"\nIntersection[{self.id}] - {self.name}\n")
+        message = "\nIntersection[ " + str(self.id) + "] - " + str(self.name) + "\n"
+        print(message)
+
+        # print(f"\tLoc: [{self.loc.lat}, {self.loc.lat}]\n")
+        message = "\tLoc: [" + str(self.loc.lat) + ", " + str(self.loc.lat) + "]\n"
+        print(message)
 
         for sig in self.signals:
             self.signals[sig].print()
@@ -278,9 +287,9 @@ class Simulation():
 
     def start(self):
 
-        print(f"--------------------\n")
-        print(f"Starting Simulation!\n")
-        print(f"--------------------\n")
+        print("--------------------\n")
+        print("Starting Simulation!\n")
+        print("--------------------\n")
 
         for intxn in self.intxns:
             self.intxns[intxn].start()

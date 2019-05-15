@@ -1,5 +1,6 @@
 import time
 from math import sin, cos, sqrt, atan2, radians, degrees
+# from datetime import datetime
 
 '''
 ABRREVATIONS
@@ -29,6 +30,45 @@ sXX : signal id
 
 
 ms = lambda: int(round(time.time() * 1000))
+
+sessionFilepath = ""
+
+sessionStarted = False
+
+def startSession():
+    global sessionFilepath, sessionStarted
+
+    # now = datetime.now()
+
+    timestr = time.strftime("%Y-%m-%d_%H-%M-%S")
+
+    sessionFilepath = "./log/SESSION_" + timestr + ".log"
+
+    print(sessionFilepath)
+
+    file = open(sessionFilepath, "w+")
+    file.close()
+
+    sessionStarted = True
+
+    sessionLog("Session started...")
+
+def sessionLog(message):
+    global sessionFilepath, sessionStarted
+
+    if not sessionStarted: startSession()
+
+    timestr = time.strftime("%Y:%m:%d %H:%M:%S\t")
+
+    message = timestr + message + "\n"
+
+    print(message)
+
+    file = open(sessionFilepath, "w+")
+
+    file.write(message)
+
+    file.close()
 
 
 

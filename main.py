@@ -9,9 +9,11 @@ import gpxpy.gpx
 sys.path.insert(0, './python')
 
 from world import CONFIG
-from utility import ms
+from utility import ms, startSession, sessionLog
 from simulation import Simulation, Intersection, Signal, Location
 from session import Session, Bicycle, Route
+
+startSession()
 
 # ------------------------------------------------------------------------------
 # Flask Application
@@ -36,7 +38,7 @@ if CONFIG['debug']['loadingJSON']: print(json.dumps(API, indent=4, sort_keys=Tru
 
 helloWorldMessage = "Hello, World Version 2.0.3"
 
-print(f"\n{helloWorldMessage}")
+print("\n" + helloWorldMessage)
 
 @app.route(API['pages']['hello'])
 def helloWorld():

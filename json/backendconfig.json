@@ -1,15 +1,15 @@
 {
   "debug" : {
 
-    "loadingJSON" : false,
+    "loadingJSON" : true,
     "application" : true,
     "intersection" : true,
-    "intersectionGetData" : false,
+    "intersectionGetData" : true,
     "signal" : true,
-    "signalTiming" : false,
+    "signalTiming" : true,
     "signalState" : true,
     "route" : {
-      "findingSignals" : false
+      "findingSignals" : true
     },
     "setbicycle" : true
   },
