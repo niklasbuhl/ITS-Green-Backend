@@ -153,34 +153,34 @@ def stopSimulation():
 def sessionSetBicycleLocation():
     # Set bicycle location
 
+    # Get the HTTP POST Body Content
     content = request.get_json()
 
-    print("\nSet Bicycle HTTP GET Request Received.\n")
-    print(content)
-    print("\n")
+    if CONFIG['debug']['setbicycle']:
 
-    if CONFIG['debug']['setbicycle']: print("\nBicycle Update!\n")
+        print("\nSet Bicycle HTTP GET Request Received.\n")
+        print(content)
+        print("\n")
 
-    if CONFIG['debug']['setbicycle']: print("\tTime: " + str(content['time']))
+        print("\nBicycle Update!\n")
+        print("\tTime: " + str(content['time']))
+        print("\tLat: " + str(content['latitude']))
+        print("\tLon: " + str(content['longitude']))
+        print("\tSpeed: " + str(content['speed']))
+        print("\tCourse: " + str(content['course']))
+        print("\n")
+
+    # Time
     sesh.bicycle.setUpdated(content['time'])
 
-    if CONFIG['debug']['setbicycle']: print("\tLat: " + str(content['latitude']))
-    if CONFIG['debug']['setbicycle']: print("\tLon: " + str(content['longitude']))
+    # Location
     sesh.bicycle.setLocation(Location(content['latitude'], content['longitude']))
 
-    if CONFIG['debug']['setbicycle']: print("\tSpeed: " + str(content['speed']))
+    # Speed
     if content['speed'] != -1: sesh.bicycle.setSpeed(content['speed'])
 
-    if CONFIG['debug']['setbicycle']: print("\tCourse: " + str(content['course']))
+    # Course
     sesh.bicycle.setCourse(content['course'])
-
-    if CONFIG['debug']['setbicycle']: print("\n")
-
-    # content = request.get_json(silent=True)
-    # print(content) # Do your processing
-
-    # payload = request.get_json()
-    # print(payload)
 
     return ('', 204)
 
@@ -199,38 +199,42 @@ def sessionGetBicycle():
 @app.route(API['session']['getColor']['url'])
 def sessionGetColor():
     # Location, Course
-
-    pass
+    # [target speed, speed difference, color]
+    return jsonift(sesh.getSessionSpeed())
 
 @app.route(API['session']['setRoute']['url'])
 def sessionSetRoute():
     # GPX route
-
     pass
 
 @app.route(API['session']['getRoute']['url'])
 def sessionGetRoute():
     # GPX route
-    return jsonify(sesh.route.getRouteArray())
+    return jsonify(sesh.getRoute())
 
 @app.route(API['session']['getSignals']['url'])
 def sessionGetSignals():
     # Signals on the route
-    return jsonify(sesh.route.getRouteSignalsArray())
+    return jsonify(sesh.getRouteSignals())
 
 @app.route(API['session']['getIntxns']['url'])
 def sessionIntersections():
     # Route Specific Intersections
+    return jsonift(sesh.getRouteIntxns())
 
-    pass
-
-@app.route(API['session']['getNextIntxn']['url'])
-def sessionNextIntersection():
+@app.route(API['session']['getNextSignal']['url'])
+def sessionNextSignal():
     # Route Specific Next Intersections
+    # [id, state]
+    return jsonify(sesh.getNextSignal())
 
+@app.route(API['session']['getNextFiveSignals']['url'])
+def sessionNextFiveSignals():
     pass
 
-
+@app.route(API['session']['getAllSignalStates']['url'])
+def sessionAllSignalStates():
+    pass
 
 # ------------------------------------------------------------------------------
 # API Application Control
@@ -266,13 +270,43 @@ sim.loadIntersections(data)
 
 sesh = Session('norrebrogade', Bicycle('b01', Location(0,0), 0, 0), Route('r01'))
 
-sesh.route.loadGPX('./gpx/dronninglouisesbro-frederikssundvej.gpx')
+sesh.loadRouteGPX('./gpx/dronninglouisesbro-frederikssundvej.gpx')
+# sesh.route.loadGPX('./gpx/dronninglouisesbro-frederikssundvej.gpx')
 
-sesh.route.getRouteIntersections(sim.intxns)
+sesh.calcRouteIntxnsAndSignals(sim)
+# sesh.route.getRouteIntersections(sim.intxns)
 
-sesh.route.listSignals()
+# sesh.calcNextSignal()
 
 # sesh.setRoute(route)
+
+# ------------------------------------------------------------------------------
+# Test Next Signal
+# ------------------------------------------------------------------------------
+
+sesh.calcNextSignal(sim)
+print(sesh.getNextSignal())
+sesh.calcNextSignalState(sim)
+print(sesh.getNextSignalState())
+print(sesh.getNextFiveSignals())
+
+# sesh.calcAllSignalStates()
+
+# print(sesh.getAllSignalStates())
+
+# 55.689490
+# 12.556548
+
+sesh.bicycle.setUpdated(0)
+sesh.bicycle.setLocation(Location(55.689490, 12.556548))
+sesh.bicycle.setSpeed(20)
+sesh.bicycle.setCourse(140)
+
+sesh.calcNextSignal(sim)
+print(sesh.getNextSignal())
+sesh.calcNextSignalState(sim)
+print(sesh.getNextSignalState())
+print(sesh.getNextFiveSignals())
 
 # ------------------------------------------------------------------------------
 # Test Run Simulation
@@ -288,7 +322,7 @@ if CONFIG['test']['simulation']: time.sleep(10)
 if CONFIG['test']['simulation']:  sim.stop()
 
 # ------------------------------------------------------------------------------
-# Testing Functions
+# Testing Functionsx
 # ------------------------------------------------------------------------------
 
 sim.getIntxnsAndSignals()
@@ -297,6 +331,6 @@ sim.getIntxnsAndSignals()
 # Web Application
 # ------------------------------------------------------------------------------
 
-if CONFIG['web']['run']:
-    if __name__ == "__main__":
-        app.run(host = '0.0.0.0', port = 80)
+# if CONFIG['web']['run']:
+#     if __name__ == "__main__":
+#         app.run(host = '0.0.0.0', port = 80)

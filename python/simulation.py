@@ -29,7 +29,8 @@ class SignalType(Enum):
     BICYCLE = 2
     BICYCLERIGHT = 3
 
-class Signal(threading.Thread):
+# class Signal(threading.Thread):
+class Signal():
 
     # Should be timeless...
 
@@ -176,10 +177,10 @@ class Signal(threading.Thread):
     def getState(self):
 
         self.lock.acquire()
-        _state = self.state.name
+        state = self.state.name
         self.lock.release()
 
-        return _state
+        return state
 
     def getTTG(self):
 
@@ -232,6 +233,12 @@ class Intersection:
 
 
 # Thread
+class SimulationUpdate():
+
+    def __init__(self):
+        pass
+
+
 class Simulation():
 
     def __init__(self):
@@ -298,6 +305,12 @@ class Simulation():
         for intxn in self.intxns:
             self.intxns[intxn].stop()
 
+    def getIntersection(self, int):
+        return self.intxns[int]
+
+    def getSignal(self, int, sig):
+        return self.intxns[int].signals[sig]
+
     def getIntxnsAndSignals(self):
 
         json_data = {}
@@ -324,6 +337,6 @@ class Simulation():
             json_data[int] = intersection
 
 
-        if CONFIG['debug']['intersectionGetData']: print(json)
+        # if CONFIG['debug']['intersectionGetData']: print(json)
 
         return json_data

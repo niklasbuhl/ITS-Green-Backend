@@ -965,7 +965,6 @@ module.exports={
     "setBicycle" : {
       "url" : "/api/session/setbicycle/"
     },
-
     "getBicycle" : {
       "url" : "/api/session/getbicycle/"
     },
@@ -975,21 +974,23 @@ module.exports={
     "setRoute" : {
       "url" : "/api/session/setroute/"
     },
-
     "getRoute" : {
       "url" : "/api/session/getroute/"
     },
     "getSignals" : {
       "url" : "/api/session/getsignals/"
-
     },
-
     "getIntxns" : {
       "url" : "/api/session/getintxns/"
     },
-
-    "getNextIntxn" : {
-      "url" : "/api/session/getnextintxn/"
+    "getNextSignal" : {
+      "url" : "/api/session/getnextsignal/"
+    },
+    "getNextFiveSignals" : {
+      "url" : "/api/session/getnextfivesignals/"
+    },
+    "getAllSignalStates" : {
+      "url" : "/api/session/getallsignalstates/"
     }
   }
 }
