@@ -226,7 +226,8 @@ function getSessionSignalStates() {
 function getNextSignal() {
 
   $.get(
-    API.session.getNextSignal,
+
+    API.session.getNextSignalStateAndTTG.url,
     // ,
     function(data) {
 
@@ -234,12 +235,13 @@ function getNextSignal() {
 
       // console.log("Next Signal Data")
       console.log("Get Next Signal");
-      console.log(data[0]) // Int
-      console.log(data[1]) // Sig
+      console.log(data.int) // Int
+      console.log(data.sig) // Sig
+      console.log(data.state) // state
 
-      sesh.setNextSignal(data[0], data[1]);
+      // sesh.setNextSignal(data[0], data[1]);
 
-      sesh.displayNextIntxn();
+      // sesh.displayNextIntxn();
 
   });
 
@@ -248,27 +250,27 @@ function getNextSignal() {
 }
 
 // Get next intersection data
-function getNextSignalState() {
-
-  $.get(
-    API.session.getNextSignalState,
-    // ,
-    function(data) {
-
-      console.log("Get Next Signal State");
-      console.log(data);
-
-      // sim.setSignalState(sesh.nextIntxn, sesh.nextSignal, data, 1);
-      sim.setSignalState(sesh.nextIntxn, sesh.nextSignal, STATE.RED, 1);
-
-      // console.log("Next Signal Data")
-      // sim.intxns.get(sesh.nextIntxn).signals.get(sesh.nextSignal).setState(data, 1);
-
-  });
-
-  getNextSignalStateLooper = setTimeout(getNextSignalState, CONFIG.loop.nextSignal.dataTimer);
-
-}
+// function getNextSignalState() {
+//
+//   $.get(
+//     API.session.getNextSignalState,
+//     // ,
+//     function(data) {
+//
+//       console.log("Get Next Signal State");
+//       console.log(data);
+//
+//       // sim.setSignalState(sesh.nextIntxn, sesh.nextSignal, data, 1);
+//       sim.setSignalState(sesh.nextIntxn, sesh.nextSignal, STATE.RED, 1);
+//
+//       // console.log("Next Signal Data")
+//       // sim.intxns.get(sesh.nextIntxn).signals.get(sesh.nextSignal).setState(data, 1);
+//
+//   });
+//
+//   getNextSignalStateLooper = setTimeout(getNextSignalState, CONFIG.loop.nextSignal.dataTimer);
+//
+// }
 
 // Bicycle Loop
 function getBicycleData() {
@@ -325,8 +327,6 @@ function displayNextSignal() {
       sim.displaySignal(sesh.nextIntxn, sesh.nextSignal, map);
   }
 
-
-
   displayNextSignalLooper = setTimeout(displayNextSignal, CONFIG.loop.nextSignal.displayTimer);
 
 }
@@ -354,9 +354,8 @@ function startLoops() {
     console.log("Starting Next Signal Loop");
 
     getNextSignal();
-    getNextSignalState();
-
-    displayNextSignal();
+    // getNextSignalState();
+    // displayNextSignal();
 
   }
 
@@ -379,7 +378,7 @@ function startLoops() {
 
 $(document).ready(setup());
 
-// $(document).ready(startLoops());
+$(document).ready(startLoops());
 
 },{"./javascript/bicycle.js":2,"./javascript/intersection.js":3,"./javascript/route.js":4,"./javascript/session.js":5,"./javascript/signal.js":6,"./javascript/simulation.js":7,"./json/api.json":8,"./json/frontendconfig.json":9,"jquery":10,"leaflet-rotatedmarker":11}],2:[function(require,module,exports){
 // -----------------------------------------------------------------------------
