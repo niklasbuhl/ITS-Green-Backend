@@ -1,30 +1,30 @@
 {
   "debug" : {
     "simulation" : {
-      "getSignal" : false,
-      "calcSignalStateAndTTG" : false
+      "getSignal" : true,
+      "calcSignalStateAndTTG" : true
     },
     "session" : {
-      "calcBicycleTargetSpeedAndColor" : false,
-      "calcNextSignalStateAndTTG" : false,
-      "calcNextSignal" : false
+      "calcBicycleTargetSpeedAndColor" : true,
+      "calcNextSignalStateAndTTG" : true,
+      "calcNextSignal" : true
     },
 
-    "loadingJSON" : false,
-    "application" : false,
-    "intersection" : false,
-    "intersectionGetData" : false,
-    "signal" : false,
-    "signalTiming" : false,
-    "signalState" : false,
+    "loadingJSON" : true,
+    "application" : true,
+    "intersection" : true,
+    "intersectionGetData" : true,
+    "signal" : true,
+    "signalTiming" : true,
+    "signalState" : true,
     "route" : {
-      "findingSignals" : false
+      "findingSignals" : true
     },
     "setbicycle" : true
   },
 
   "test" : {
-    "simulation" : false
+    "simulation" : true
   },
 
   "data" : {
