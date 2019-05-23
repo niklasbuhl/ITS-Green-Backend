@@ -9,7 +9,7 @@ import gpxpy.gpx
 sys.path.insert(0, './python')
 
 from world import CONFIG
-from utility import ms, startSessionLog, sessionLog
+from utility import ms, startSessionLog, sessionLog, msToKmt
 from simulation import Simulation, Intersection, Signal, Location
 from session import Session, Bicycle, Route
 
