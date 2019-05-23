@@ -239,7 +239,10 @@ function getNextSignal() {
       console.log(data.sig) // Sig
       console.log(data.state) // state
 
-      // sesh.setNextSignal(data[0], data[1]);
+      // sesh.setNextSignal(data.int, data.sig);
+
+      sim.setSignalState(data.int, data.sig, data.state, 1);
+      sim.displaySignal(data.int, data.sig, map);
 
       // sesh.displayNextIntxn();
 
@@ -317,15 +320,13 @@ function updateBicycleLoop() {
 
 function displayNextSignal() {
 
-  console.log("Display Next Signal ["+sesh.nextIntxn+"]["+sesh.nextSignal+"]");
+  // console.log("Display Next Signal ["+sesh.nextIntxn+"]["+sesh.nextSignal+"]");
 
   // console.log(sim.intxns.get(sesh.nextIntxn))
 
   // sim.intxns.get(sesh.nextIntxn).signals.get(sesh.nextSignal).display(map);
 
-  if (sesh.nextSignalSet) {
-      sim.displaySignal(sesh.nextIntxn, sesh.nextSignal, map);
-  }
+  sim.displaySignal(sesh.nextIntxn, sesh.nextSignal, map);
 
   displayNextSignalLooper = setTimeout(displayNextSignal, CONFIG.loop.nextSignal.displayTimer);
 
@@ -354,8 +355,6 @@ function startLoops() {
     console.log("Starting Next Signal Loop");
 
     getNextSignal();
-    // getNextSignalState();
-    // displayNextSignal();
 
   }
 
@@ -1022,7 +1021,7 @@ class Simulation {
 
   setSignalState(intxnId, sigId, state, opacity) {
 
-    // console.log(this.intxns.get(intxnId));
+    console.log(this.intxns.get(intxnId));
 
     this.intxns.get(intxnId).setSignalState(sigId, state, opacity);
 
@@ -1200,12 +1199,12 @@ module.exports={
     "nextSignal" : {
       "run" : true,
       "dataTimer" : 2000,
-      "displayTimer" : 100
+      "displayTimer" : 2000
     },
     "bicycle" : {
       "run" : true,
       "dataTimer" : 2000,
-      "updateTimer" : 500
+      "updateTimer" : 2000
     }
   }
 }

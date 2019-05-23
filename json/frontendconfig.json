@@ -25,12 +25,12 @@
     "nextSignal" : {
       "run" : true,
       "dataTimer" : 2000,
-      "displayTimer" : 100
+      "displayTimer" : 2000
     },
     "bicycle" : {
       "run" : true,
       "dataTimer" : 2000,
-      "updateTimer" : 500
+      "updateTimer" : 2000
     }
   }
 }

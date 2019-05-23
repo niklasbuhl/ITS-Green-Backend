@@ -116,7 +116,7 @@ class Simulation {
 
   setSignalState(intxnId, sigId, state, opacity) {
 
-    // console.log(this.intxns.get(intxnId));
+    console.log(this.intxns.get(intxnId));
 
     this.intxns.get(intxnId).setSignalState(sigId, state, opacity);
 
