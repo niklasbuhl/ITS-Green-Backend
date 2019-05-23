@@ -512,7 +512,6 @@ class Session:
                 if CONFIG['debug']['session']['calcNextSignal']:
                     print("Found signal!")
 
-                self.bicycle.distanceToNXS = dist
                 self.nextSignal = testNextSignal
 
                 return
@@ -583,6 +582,8 @@ class Session:
         distance = getDistanceFromLatLonInM(
             bikeLat, bikeLon, sigLoc.lat, sigLoc.lon
         )
+
+        self.bicycle.distanceToNXS = distance
 
         if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
             print("\tDistance between bicycle and signal: {0}m".format(round(distance,1)))
