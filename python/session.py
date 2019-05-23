@@ -805,6 +805,19 @@ class Session:
         # Sort array after differences
         speeds = sorted(speeds, key=attrgetter('relativeSpeedChange'))
 
+        if bikeSpeed < 5:
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\n\tYou're moving with walking or less speed!")
+
+            self.bicycle.speedChange = 0
+            self.bicycle.targetSpeed = bikeSpeed
+            self.bicycle.deviceColor[0] = 255
+            self.bicycle.deviceColor[1] = 0
+            self.bicycle.deviceColor[2] = 255
+
+            return
+
+
         maxUpSpeedChange = bikeSpeed * 0.1
 
         for possibleSpeed in speeds:
