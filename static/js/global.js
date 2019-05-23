@@ -107,6 +107,18 @@ const STATE = {
   ACTIVE: 'ACTIVE'
 };
 
+function state(state) {
+
+  if(state == 'RED') return STATE.RED;
+  if(state == 'ORANGE') return STATE.ORANGE;
+  if(state == 'GREEN') return STATE.GREEN;
+  if(state == 'YELLOW') return STATE.YELLOW;
+  if(state == 'INACTIVE') return STATE.INACTIVE;
+  if(state == 'ACTIVE') return STATE.ACTIVE;
+
+
+}
+
 var CAR_S = new Map();
 
 CAR_S.set(STATE.RED,    carStraightIconRed);

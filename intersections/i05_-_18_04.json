@@ -1,0 +1,90 @@
+{
+  "intxns": {
+    "i05" : {
+      "kkName" : "Noerrebrogade-Kapelvej",
+      "kkId" : "18.04",
+      "loc" : {
+        "lat" : 55.690552,
+        "lon" : 12.554593
+      },
+
+      "programRevolution" : {
+        "P1" : 80,
+        "P2" : 80,
+        "P3" : 70,
+        "P4" : 60
+      },
+
+      "programOffsets" : {
+        "P1" : 23,
+        "P2" : 40,
+        "P3" : 22,
+        "P4" : 26
+      },
+
+      "programs" : [
+        { "program" : "P3", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 1, "m" : 0 } },
+        { "program" : "P4", "from" : { "h" : 1, "m" : 0 }, "to" : { "h" : 5, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 5, "m" : 0 }, "to" : { "h" : 6, "m" : 20 } },
+        { "program" : "P1", "from" : { "h" : 6, "m" : 20 }, "to" : { "h" : 12, "m" : 0 } },
+        { "program" : "P2", "from" : { "h" : 12, "m" : 0 }, "to" : { "h" : 18, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 18, "m" : 0 }, "to" : { "h" : 24, "m" : 0 } }
+      ],
+
+      "signals" : {
+
+        "s01" : {
+          "real" : false,
+          "kkId" : "B2",
+          "type" : "regular",
+          "course" : 45,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s02" : {
+          "real" : true,
+          "kkId" : "A2",
+          "type" : "regular",
+          "course" : 132,
+          "programs" : {
+            "P1" : { "offset" : 67, "RED" : 25, "ORANGE" : 2, "GREEN" : 34, "YELLOW" : 19 },
+            "P2" : { "offset" : 67, "RED" : 25, "ORANGE" : 2, "GREEN" : 35, "YELLOW" : 18 },
+            "P3" : { "offset" : 59, "RED" : 23, "ORANGE" : 2, "GREEN" : 27, "YELLOW" : 18 },
+            "P4" : { "offset" : 51, "RED" : 21, "ORANGE" : 2, "GREEN" : 19, "YELLOW" : 18 }
+          }
+        },
+
+        "s03" : {
+          "real" : false,
+          "kkId" : "B1",
+          "type" : "regular",
+          "course" : 212,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s04" : {
+          "real" : true,
+          "kkId" : "A1",
+          "type" : "regular",
+          "course" : 318,
+          "programs" : {
+            "P1" : { "offset" : 67, "RED" : 25, "ORANGE" : 2, "GREEN" : 34, "YELLOW" : 19 },
+            "P2" : { "offset" : 67, "RED" : 25, "ORANGE" : 2, "GREEN" : 35, "YELLOW" : 18 },
+            "P3" : { "offset" : 59, "RED" : 23, "ORANGE" : 2, "GREEN" : 27, "YELLOW" : 18 },
+            "P4" : { "offset" : 51, "RED" : 21, "ORANGE" : 2, "GREEN" : 19, "YELLOW" : 18 }
+          }
+        }
+      }
+    }
+  }
+}

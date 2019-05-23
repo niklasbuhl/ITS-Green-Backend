@@ -100,6 +100,8 @@ displayIntersectionColors(map);
 // Simulation
 // -----------------------------------------------------------------------------
 
+console.log("Creating Simulation and Session");
+
 var sim = new Simulation();
 
 var sesh = new Session();
@@ -115,15 +117,19 @@ var setupDone = false;
 
 function setup() {
 
-  console.log("Starting setup...");
+  console.log("S0.0 Starting setup...");
 
   var path = baseURL + API.sim.getIntxns.url;
 
-  console.log("Intersections path: "+path+".")
+  console.log("S1.0 Intersections path: "+path+".")
 
   // get(path, function(data) {console.log(data);});
 
+  console.log("S1.2 Get intersections...")
+
   $.get(path, function(data) {
+
+    console.log("S1.2 Got intersections!")
 
     sim.loadIntersectionsAndSignals(data);
 
@@ -133,11 +139,15 @@ function setup() {
 
     // sim.displayAllIntxns(map);
 
+    console.log("S1.3 Display all signals (inactice).")
+
     sim.displayAllSignals(map);
 
   });
 
   path = baseURL + API.session.getRoute.url;
+
+  console.log("S2.0 Session Route path: "+path+".")
 
   $.get(path, function(data) {
 
@@ -151,20 +161,31 @@ function setup() {
 
   path = baseURL + API.session.getSignals.url;
 
+  console.log("S3.0 Session Signals path: "+path+".")
+
   $.get(path, function(data) {
 
-    console.log(data);
+    console.log("S3.1 - Get session signals...");
+
+    // console.log(data);
+
+    console.log("S3.2 - Add session signals...");
 
     sesh.addSignals(data, map);
 
+    console.log("S3.3 - List session signals...");
     sesh.listSignals();
 
-    // Color all the signals blue
+    console.log("S3.4 - Color all signals blue...");
     sim.activateSignals(sesh.signals);
+    sim.displayAllSignals(map);
 
+    console.log("S3.5 - Color all intersections blue...");
     sesh.displayIntersections(sim, map);
 
-    sesh.displayNextIntxn('i09');
+    // sesh.displayNextIntxn('i09');
+
+    console.log("S3.6 - Got session signals!");
 
   });
 
@@ -177,62 +198,75 @@ function setup() {
 
   console.log("Starting Done!");
 
+  setupDone = true;
+
 }
 
 // -----------------------------------------------------------------------------
 // Get Data Loops
 // -----------------------------------------------------------------------------
 
-var getDataAllIntxnsLooper;
 var getDataSessionSignalsLooper;
-var getDataNextSignalLooper;
+var getNextSignalLooper;
+var getNextSignalStateLooper;
+
 var getDataBicycleLooper;
 
-function getAllIntxnsData() {
-
-  console.log("Getting All Intersections Data");
-
-  // // Update All Signals
-  // if (sim.intersectionsLoaded) {
-  //
-  //   // sim.updateAllSignals();
-  //
-  //   for (var int of sim.intxns.values()) {
-  //
-  //     for (var sig of int.signals.values()) {
-  //
-  //       $.get(
-  //         API.sim.getSignalState,
-  //         {'intxnid' : int.id, 'sigid' : sig.id},
-  //         function(data) {
-  //
-  //           sim.setSignalState(data.intId, data.sigId, data.state);
-  //
-  //       });
-  //     }
-  //   }
-  // }
-
-  getDataAllIntxnsLooper = setTimeout(getAllIntxnsData, CONFIG.loop.allIntxns.dataTimer);
-
-}
-
 // Update Session Signals Loop
-
-function getSessionSignalsData() {
+function getSessionSignalStates() {
 
   console.log("Getting Session Signals Data");
 
-  getDataSessionSignalsLooper = setTimeout(getSessionSignalsData, CONFIG.loop.sessionSignals.dataTimer);
+  getDataSessionSignalsLooper = setTimeout(getSessionSignalStates, CONFIG.loop.sessionSignals.dataTimer);
 
 }
 
 // Update Next Signal Loop
-function getNextSignalData() {
+function getNextSignal() {
 
-  console.log("Getting Next Signal Data");
+  $.get(
+    API.session.getNextSignal,
+    // ,
+    function(data) {
 
-  getDataNextSignalLooper = setTimeout(getNextSignalData, CONFIG.loop.bicycle.dataTimer);
+      // console.log(data)
+
+      // console.log("Next Signal Data")
+      console.log("Get Next Signal");
+      console.log(data[0]) // Int
+      console.log(data[1]) // Sig
+
+      sesh.setNextSignal(data[0], data[1]);
+
+      sesh.displayNextIntxn();
+
+  });
+
+  getNextSignalLooper = setTimeout(getNextSignal, CONFIG.loop.nextSignal.dataTimer);
+
+}
+
+// Get next intersection data
+function getNextSignalState() {
+
+  $.get(
+    API.session.getNextSignalState,
+    // ,
+    function(data) {
+
+      console.log("Get Next Signal State");
+      console.log(data);
+
+      // sim.setSignalState(sesh.nextIntxn, sesh.nextSignal, data, 1);
+      sim.setSignalState(sesh.nextIntxn, sesh.nextSignal, STATE.RED, 1);
+
+      // console.log("Next Signal Data")
+      // sim.intxns.get(sesh.nextIntxn).signals.get(sesh.nextSignal).setState(data, 1);
+
+  });
+
+  getNextSignalStateLooper = setTimeout(getNextSignalState, CONFIG.loop.nextSignal.dataTimer);
+
 }
 
 // Bicycle Loop
@@ -268,12 +302,31 @@ function getBicycleData() {
 // -----------------------------------------------------------------------------
 
 var updateBicycleLooper;
+var displayNextSignalLooper;
 
 function updateBicycleLoop() {
 
   sesh.bicycle.update();
 
   updateBicycleLooper = setTimeout(updateBicycleLoop, CONFIG.loop.bicycle.updateTimer);
+
+}
+
+function displayNextSignal() {
+
+  console.log("Display Next Signal ["+sesh.nextIntxn+"]["+sesh.nextSignal+"]");
+
+  // console.log(sim.intxns.get(sesh.nextIntxn))
+
+  // sim.intxns.get(sesh.nextIntxn).signals.get(sesh.nextSignal).display(map);
+
+  if (sesh.nextSignalSet) {
+      sim.displaySignal(sesh.nextIntxn, sesh.nextSignal, map);
+  }
+
+
+
+  displayNextSignalLooper = setTimeout(displayNextSignal, CONFIG.loop.nextSignal.displayTimer);
 
 }
 
@@ -284,19 +337,26 @@ function updateBicycleLoop() {
 
 function startLoops() {
 
-  if (CONFIG.loop.allIntxns.run) {
-    console.log("Starting All Intersections Loop");
-    getAllIntxnsData();
-  }
+  console.log("Start Loops...")
 
-  if (CONFIG.loop.sessionSignals.run) {
-    console.log("Starting Session Signals Loop");
-    getSessionSignalsData();
-  }
+  // if (CONFIG.loop.allIntxns.run) {
+  //   console.log("Starting All Intersections Loop");
+  //   getAllIntxnsData();
+  // }
+  //
+  // if (CONFIG.loop.sessionSignals.run) {
+  //   console.log("Starting Session Signals Loop");
+  //   getSessionSignalsData();
+  // }
 
   if (CONFIG.loop.nextSignal.run) {
     console.log("Starting Next Signal Loop");
-    getNextSignalData();
+
+    getNextSignal();
+    getNextSignalState();
+
+    displayNextSignal();
+
   }
 
   if (CONFIG.loop.bicycle.run) {
@@ -318,6 +378,4 @@ function startLoops() {
 
 $(document).ready(setup());
 
-while(!setupDone) {
-  $(document).ready(startLoops());
-}
+$(document).ready(startLoops());

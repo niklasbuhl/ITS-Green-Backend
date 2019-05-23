@@ -47,6 +47,11 @@ class Intersection {
     }
   }
 
+  displaySignal(sigId, map) {
+    this.signals.get(sigId).display(map);
+
+  }
+
   setSignalState(sigId, state, opacity) {
 
     // console.log(this.signals.get(sigId));

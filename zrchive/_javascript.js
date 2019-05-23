@@ -209,3 +209,36 @@ function displayRoute() {}
 setup();
 
 loop();
+
+
+
+// Get all intxns data
+
+function getAllIntxnsData() {
+
+  console.log("Getting All Intersections Data");
+
+  // // Update All Signals
+  // if (sim.intersectionsLoaded) {
+  //
+  //   // sim.updateAllSignals();
+  //
+  //   for (var int of sim.intxns.values()) {
+  //
+  //     for (var sig of int.signals.values()) {
+  //
+  //       $.get(
+  //         API.sim.getSignalState,
+  //         {'intxnid' : int.id, 'sigid' : sig.id},
+  //         function(data) {
+  //
+  //           sim.setSignalState(data.intId, data.sigId, data.state);
+  //
+  //       });
+  //     }
+  //   }
+  // }
+
+  getDataAllIntxnsLooper = setTimeout(getAllIntxnsData, CONFIG.loop.allIntxns.dataTimer);
+
+}

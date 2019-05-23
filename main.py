@@ -9,11 +9,12 @@ import gpxpy.gpx
 sys.path.insert(0, './python')
 
 from world import CONFIG
-from utility import ms, startSession, sessionLog
+from utility import ms, startSessionLog, sessionLog
 from simulation import Simulation, Intersection, Signal, Location
 from session import Session, Bicycle, Route
 
-startSession()
+# startSessionLog()
+# sessionLog("Session started...")
 
 # ------------------------------------------------------------------------------
 # Flask Application
@@ -25,7 +26,7 @@ app = Flask(__name__)
 # Load API Documentation
 # ------------------------------------------------------------------------------
 
-API = ""
+API = None
 
 with open("./json/api.json", "r") as read_file:
     API = json.load(read_file)
@@ -50,9 +51,10 @@ def helloWorld():
     )
 
 # ------------------------------------------------------------------------------
-# Browser Control Page
+# Pages
 # ------------------------------------------------------------------------------
 
+# Control
 @app.route(API['pages']['control'])
 def controlPage():
     return render_template(
@@ -61,24 +63,24 @@ def controlPage():
         stop = API['sim']['stop']['url']
     )
 
-# ------------------------------------------------------------------------------
-# Simulation View Page
-# ------------------------------------------------------------------------------
-
+# Map
 @app.route(API['pages']['map'])
-def simulationPage():
+def mapPage():
     return render_template("map.html")
 
-# ------------------------------------------------------------------------------
-# Color Page
-# ------------------------------------------------------------------------------
+# Session
+@app.route(API['pages']['session'])
+def sessionPage():
+    pass
+    # return render_template("color.html")
 
-@app.route(API['pages']['color'])
-def color():
-    return render_template("color.html")
+# Route Intersections
+@app.route(API['pages']['routeIntxns'])
+def routeIntxnsPage():
+    pass
 
 # ------------------------------------------------------------------------------
-# API Browser Simulation Visualization Data
+# API: Browser Simulation Visualization
 # ------------------------------------------------------------------------------
 
 # Get a list of all intersections
@@ -92,65 +94,15 @@ def simulationGetIntersections():
     # Create a JSON array
     json_data = sim.getIntxnsAndSignals()
 
-
-
-    # for intersection in Intersections:
-    #     id = Intersections[intersection].id
-    #     lat = Intersections[intersection].latitude
-    #     lon = Intersections[intersection].longitude
-    #
-    #     json.append({"id" : id, "lat": lat, "lon": lon})
-
-
-    #testJSON = [{"S01" : "Niklas", "S02" : "Sine"}]
-
-
     return jsonify(json_data)
 
-# Get a specific signal state
-@app.route(API['sim']['getSignalState']['url'])
-def simulationGetSignalState():
-    # Signal state: RED, ORANGE, GREEN, YELLOW
-
-    intxnId = request.args.get('intxnid')
-    sigId = request.args.get('sigid')
-
-    return jsonify(
-        state = sim.intxns[intxnId].signals[sigId].getState(),
-        intId = intxnId,
-        sigId = sigId
-    )
-
-# Get a specific ttg
-@app.route(API['sim']['getSignalTTG']['url'])
-def simulationGetTTG():
-    # Signal TTG: 1.2 s
-
-    intxnId = request.args.get('intxnid')
-    sigId = request.args.get('sigid')
-
-    return sim.intxns[intxnId].signals[sigId].getTTG()
-
-@app.route(API['sim']['start']['url'])
-def startSimulation():
-    # Start simulation (signal threads)
-    sim.start()
-
-    return ('', 204)
-
-@app.route(API['sim']['stop']['url'])
-def stopSimulation():
-    # Stop simulation (signal threads)
-    sim.stop()
-
-    return ('', 204)
-
 # ------------------------------------------------------------------------------
-# API Browser Session Visualization Data
+# API: Session
 # ------------------------------------------------------------------------------
 
 @app.route(API['session']['setBicycle']['url'], methods=['GET', 'POST'])
-def sessionSetBicycleLocation():
+def sessionSetBicycle():
+
     # Set bicycle location
 
     # Get the HTTP POST Body Content
@@ -182,11 +134,15 @@ def sessionSetBicycleLocation():
     # Course
     sesh.bicycle.setCourse(content['course'])
 
+    # Set Calculate Thread Flag
+    # ???
+
+    # Return nothing, except accepted
     return ('', 204)
 
 @app.route(API['session']['getBicycle']['url'])
 def sessionGetBicycle():
-    # Location, Course
+    # Location, Course, Speed
 
     return jsonify(
         time = sesh.bicycle.updated,
@@ -196,20 +152,78 @@ def sessionGetBicycle():
         course = sesh.bicycle.course
     )
 
-@app.route(API['session']['getColor']['url'])
-def sessionGetColor():
+# The Grand API Request that calculated everything...
+
+@app.route(API['session']['getDeviceColor']['url'])
+def sessionGetDeviceColor():
+    global sim, sesh
+
+    # Calculate Next Signal on Route
+    sesh.calcNextSignal(sim)
+
+    # Calculate Next Signal State and TTG
+    sesh.calcNextSignalStateAndTTG(sim)
+
+    # Calculate Bicycle Target Speed And Color
+    sesh.calcBicycleTargetSpeedAndColor(sim)
+
+    # Get Bicycle Target Speed and Color
+    #sesh.getBicycleTargetSpeedAndColor()
+
+    # Get Next Signal State And TTG
+    #sesh.getNextSignalStateAndTTG()
+
     # Location, Course
     # [target speed, speed difference, color]
-    return jsonift(sesh.getSessionSpeed())
+    return jsonify(
+        r = sesh.bicycle.deviceColor[0],
+        g = sesh.bicycle.deviceColor[1],
+        b = sesh.bicycle.deviceColor[2]
+    )
 
-@app.route(API['session']['setRoute']['url'])
-def sessionSetRoute():
-    # GPX route
-    pass
+
+# Get Next Signal State And TTG
+@app.route(API['session']['getNextSignalStateAndTTG']['url'])
+def sessionGetNextSignalStateAndTTG():
+    global sesh, sim
+
+    # Calculate Next Signal on Route
+    sesh.calcNextSignal(sim)
+
+    # Calculate Next Signal State and TTG
+    sesh.calcNextSignalStateAndTTG(sim)
+
+    # Calculate Bicycle Target Speed And Color
+    sesh.calcBicycleTargetSpeedAndColor(sim)
+
+    data = sesh.getNextSignalStateAndTTG()
+
+    # Do something with the data...
+
+    return ('', 204)
+
+@app.route(API['session']['getBicycleTargetSpeedAndColor']['url'])
+def sessionGetBicycleTargetSpeedAndColor():
+    global sesh, sim
+
+    # Calculate Next Signal on Route
+    sesh.calcNextSignal(sim)
+
+    # Calculate Next Signal State and TTG
+    sesh.calcNextSignalStateAndTTG(sim)
+
+    # Calculate Bicycle Target Speed And Color
+    sesh.calcBicycleTargetSpeedAndColor(sim)
+
+    data = sesh.getBicycleTargetSpeedAndColor()
+
+    # Do something with the data...
+
+    return ('', 204)
 
 @app.route(API['session']['getRoute']['url'])
 def sessionGetRoute():
-    # GPX route
+    # GPX route as point
     return jsonify(sesh.getRoute())
 
 @app.route(API['session']['getSignals']['url'])
@@ -218,29 +232,32 @@ def sessionGetSignals():
     return jsonify(sesh.getRouteSignals())
 
 @app.route(API['session']['getIntxns']['url'])
-def sessionIntersections():
+def sessionGetIntersections():
     # Route Specific Intersections
-    return jsonift(sesh.getRouteIntxns())
+    return jsonify(sesh.getRouteIntxns())
 
-@app.route(API['session']['getNextSignal']['url'])
-def sessionNextSignal():
-    # Route Specific Next Intersections
-    # [id, state]
-    return jsonify(sesh.getNextSignal())
-
-@app.route(API['session']['getNextFiveSignals']['url'])
-def sessionNextFiveSignals():
-    pass
+# @app.route(API['session']['getTargetSpeedAndColor']['url'])
+# def sessionGetTargetSpeedAndColor():
+#     pass
 
 @app.route(API['session']['getAllSignalStates']['url'])
 def sessionAllSignalStates():
     pass
 
-# ------------------------------------------------------------------------------
-# API Application Control
-# ------------------------------------------------------------------------------
+@app.route(API['session']['startWestGoingNoerrebrogade']['url'])
+def sessionStartWestGoingNoerrebrogade():
+    global sesh
 
+    # Clear the data somehow...
 
+    sesh = Session('Noerrebrogade Going West', Bicycle('b01', Location(0,0), 0, 0), Route('r01'))
+
+    sesh.loadRouteGPX('./gpx/dronninglouisesbro-frederikssundvej.gpx')
+
+    sesh.calcRouteIntxnsAndSignals(sim)
+
+    # Return nothing
+    return ('', 204)
 
 # ------------------------------------------------------------------------------
 # Load Intersections from JSON
@@ -261,71 +278,48 @@ sim = Simulation()
 sim.loadIntersections(data)
 
 # ------------------------------------------------------------------------------
-# Setup Session
+# Setup Initial 'Noerrebrogade Going West' Session
 # ------------------------------------------------------------------------------
 
-# sesh = Session()
-
-# bike =
-
-sesh = Session('norrebrogade', Bicycle('b01', Location(0,0), 0, 0), Route('r01'))
+sesh = Session('Noerrebrogade Going West', Bicycle('b01', Location(0,0), 0, 0), Route('r01'))
 
 sesh.loadRouteGPX('./gpx/dronninglouisesbro-frederikssundvej.gpx')
-# sesh.route.loadGPX('./gpx/dronninglouisesbro-frederikssundvej.gpx')
 
 sesh.calcRouteIntxnsAndSignals(sim)
-# sesh.route.getRouteIntersections(sim.intxns)
-
-# sesh.calcNextSignal()
-
-# sesh.setRoute(route)
 
 # ------------------------------------------------------------------------------
-# Test Next Signal
+# Run a few tests...
 # ------------------------------------------------------------------------------
 
-sesh.calcNextSignal(sim)
-print(sesh.getNextSignal())
-sesh.calcNextSignalState(sim)
-print(sesh.getNextSignalState())
-print(sesh.getNextFiveSignals())
+now = ms()
 
-# sesh.calcAllSignalStates()
+print("\n# ---------------------------------------------------------------")
+print("# Run a few tests...")
+print("# ---------------------------------------------------------------")
 
-# print(sesh.getAllSignalStates())
-
-# 55.689490
-# 12.556548
-
+# Set Bicycle Position to Nørreport
 sesh.bicycle.setUpdated(0)
-sesh.bicycle.setLocation(Location(55.689490, 12.556548))
+sesh.bicycle.setLocation(Location(55.683634, 12.571796))
 sesh.bicycle.setSpeed(20)
-sesh.bicycle.setCourse(140)
+sesh.bicycle.setCourse(300)
 
+# Calculate Next Signal on Route
 sesh.calcNextSignal(sim)
-print(sesh.getNextSignal())
-sesh.calcNextSignalState(sim)
-print(sesh.getNextSignalState())
-print(sesh.getNextFiveSignals())
 
-# ------------------------------------------------------------------------------
-# Test Run Simulation
-# ------------------------------------------------------------------------------
+# Calculate Next Signal State and TTG
+sesh.calcNextSignalStateAndTTG(sim)
 
-# Start Simulation Signal Threads
-if CONFIG['test']['simulation']: sim.start()
+# Calculate Bicycle Target Speed And Color
+sesh.calcBicycleTargetSpeedAndColor(sim)
 
-# Timer
-if CONFIG['test']['simulation']: time.sleep(10)
+# Get Bicycle Target Speed and Color
+sesh.getBicycleTargetSpeedAndColor()
 
-# Stop Simulation Signal Threads
-if CONFIG['test']['simulation']:  sim.stop()
+# Get Next Signal State And TTG
+sesh.getNextSignalStateAndTTG()
 
-# ------------------------------------------------------------------------------
-# Testing Functionsx
-# ------------------------------------------------------------------------------
-
-sim.getIntxnsAndSignals()
+# Peace
+print("Peace out! {0} ms\n\n".format(ms() - now))
 
 # ------------------------------------------------------------------------------
 # Web Application

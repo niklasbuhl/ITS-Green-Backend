@@ -7,7 +7,8 @@
     "hello" : "/",
     "map" : "/map",
     "control" : "/control/",
-    "color" : "/color/"
+    "session" : "/session/",
+    "routeIntxns" : "/routeintxns/"
   },
 
   "sim" : {
@@ -60,29 +61,45 @@
     "getBicycle" : {
       "url" : "/api/session/getbicycle/"
     },
-    "getColor" : {
-      "url" : "/api/session/getcolor/"
+
+    "getDeviceColor" : {
+      "url" : "/api/session/getdevicecolor/"
     },
+
+    "getNextSignalStateAndTTG" : {
+      "url" : "/api/session/getnextsignalstateandttg/"
+    },
+
+    "getBicycleTargetSpeedAndColor" : {
+      "url" : "/api/session/getbicycletargetspeedandcolor/"
+    },
+
     "setRoute" : {
       "url" : "/api/session/setroute/"
     },
+
     "getRoute" : {
       "url" : "/api/session/getroute/"
     },
+
     "getSignals" : {
       "url" : "/api/session/getsignals/"
     },
+
     "getIntxns" : {
       "url" : "/api/session/getintxns/"
     },
+
     "getNextSignal" : {
       "url" : "/api/session/getnextsignal/"
     },
-    "getNextFiveSignals" : {
-      "url" : "/api/session/getnextfivesignals/"
-    },
+
     "getAllSignalStates" : {
       "url" : "/api/session/getallsignalstates/"
+    },
+
+    "startWestGoingNoerrebrogade" : {
+      "url" : "/api/session/startwestgoingnoerrebrogade"
     }
   }
 }

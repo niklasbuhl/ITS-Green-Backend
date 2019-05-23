@@ -1,0 +1,77 @@
+{
+  "intxns": {
+    "i06" : {
+      "kkName" : "Noerrebrogade-Sjaellandsgade",
+      "kkId" : "18.05",
+      "loc" : {
+        "lat" : 55.692653,
+        "lon" : 12.551407
+      },
+
+      "programRevolution" : {
+        "P1" : 0,
+        "P2" : 0,
+        "P3" : 0,
+        "P4" : 0
+      },
+
+      "programOffsets" : {
+        "P1" : 0,
+        "P2" : 0,
+        "P3" : 0,
+        "P4" : 0
+      },
+
+      "programs" : [
+        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } },
+        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } },
+        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } },
+        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } },
+        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } },
+        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } }
+      ],
+
+      "signals" : {
+
+        "s01" : {
+          "real" : false,
+          "kkId" : "B",
+          "type" : "regular",
+          "course" : 49,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 }
+          }
+        },
+
+        "s02" : {
+          "real" : true,
+          "kkId" : "A2",
+          "type" : "regular",
+          "course" : 138,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 }
+          }
+        },
+
+        "s03" : {
+          "real" : true,
+          "kkId" : "A1",
+          "type" : "regular",
+          "course" : 318,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 }
+          }
+        }
+      }
+    }
+  }
+}

@@ -122,6 +122,19 @@ class Simulation {
 
   }
 
+  displaySignal(intId, sigId, map) {
+
+    this.intxns.get(intId).displaySignal(sigId, map);
+
+  }
+
+
+  // displaySignal() {
+  //
+  //   console.log("Display the state");
+  //
+  // }
+
   activateSignals(signalsArray) {
 
     var n = signalsArray.length;
@@ -130,7 +143,11 @@ class Simulation {
 
       this.setSignalState(signalsArray[i][0], signalsArray[i][1], STATE.ACTIVE, 0.5);
 
+      // this.display();
+
     }
+
+    // this.displayAllSignals();
 
   }
 };

@@ -2,7 +2,7 @@
   "intxns": {
     "i01" : {
       "name" : "Tomsgaardsvej-Frederikssundvej",
-      "id" : "18.01",
+      "id" : "17.08",
       "loc" : {
         "lat" : 55.70602,
         "lon" : 12.52162
@@ -194,7 +194,7 @@
       }
     },
     "i15" : {
-      "name" : "Noerrebrogade-Hilleroedgade",
+      "name" : "Noerrebrogade-Cykelruten",
       "id" : "19.14",
       "loc" : {
         "lat" : 55.699045,

@@ -21,21 +21,13 @@ sXX : signal id
 
 '''
 
-# debug = True
-# runApp = True
-# testSimulation = True
-# testRunSimulation = False
-# debugSignalUpdateTiming = False
-
-
-
 ms = lambda: int(round(time.time() * 1000))
 
 sessionFilepath = ""
 
 sessionStarted = False
 
-def startSession():
+def startSessionLog():
     global sessionFilepath, sessionStarted
 
     # now = datetime.now()
@@ -51,9 +43,8 @@ def startSession():
 
     sessionStarted = True
 
-    sessionLog("Session started...")
-
 def sessionLog(message):
+
     global sessionFilepath, sessionStarted
 
     if not sessionStarted: startSession()
@@ -69,7 +60,6 @@ def sessionLog(message):
     file.write(message)
 
     file.close()
-
 
 
 # https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula/27943#27943
@@ -92,8 +82,24 @@ def getCourseFromLatLonInDegrees(lat1, lon1, lat2, lon2):
     return course
 
 def calc_velocity(dist_km, time_start, time_end):
-    """Return 0 if time_start == time_end, avoid dividing by 0"""
+    """ Return 0 if time_start == time_end, avoid dividing by 0. """
     return dist_km / (time_end - time_start).seconds if time_end > time_start else 0
+
+def msToKmt(ms):
+    return (ms / 1000) * 3600
+
+# https://stackoverflow.com/questions/1969240/mapping-a-range-of-values-to-another
+def translate(value, leftMin, leftMax, rightMin, rightMax):
+    # Figure out how 'wide' each range is
+    leftSpan = leftMax - leftMin
+    rightSpan = rightMax - rightMin
+
+    # Convert the left range into a 0-1 range (float)
+    valueScaled = float(value - leftMin) / float(leftSpan)
+
+    # Convert the 0-1 range into a value in the right range.
+    return rightMin + (valueScaled * rightSpan)
+
 
 '''
 

@@ -23,7 +23,7 @@
       "displayTimer" : 100
     },
     "nextSignal" : {
-      "run" : false,
+      "run" : true,
       "dataTimer" : 2000,
       "displayTimer" : 100
     },

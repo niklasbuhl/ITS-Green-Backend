@@ -1,5 +1,14 @@
 {
   "debug" : {
+    "simulation" : {
+      "getSignal" : false,
+      "calcSignalStateAndTTG" : false
+    },
+    "session" : {
+      "calcBicycleTargetSpeedAndColor" : false,
+      "calcNextSignalStateAndTTG" : false,
+      "calcNextSignal" : false
+    },
 
     "loadingJSON" : true,
     "application" : true,
@@ -15,12 +24,12 @@
   },
 
   "test" : {
-    "simulation" : false
+    "simulation" : true
   },
 
   "data" : {
     "intxns" : {
-      "jsonpath" : "./json/noerrebrogade-frederikssundvej-intersections-real.json",
+      "jsonpath" : "./json/noerrebrogade-frederikssundvej-intersections-real-timing.json",
       "realtiming" : false
     }
   },

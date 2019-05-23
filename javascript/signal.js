@@ -16,14 +16,16 @@ class Signal {
     this.course = course;
     this.loc = loc;
     this.type = TYPE.CAR_S;
-    this.color = STATE.INACTIVE;
+    this.state = STATE.INACTIVE;
+    this.stateUpdate = true;
     this.active = false;
+    this.opacity = 0.5;
 
     // Icon Marker
     this.marker = new L.marker([loc.lat, loc.lon], {
-      icon : ICON.get(this.type).get(this.color),
+      icon : ICON.get(this.type).get(this.state),
       rotationAngle : this.course,
-      opacity: 0.5
+      opacity: this.opacity
     });
 
   }
@@ -44,18 +46,27 @@ class Signal {
     //   console.log(data);
     // });
 
-    this.marker.setOpacity(opacity);
+    if (this.state != state) {
 
-    this.marker.setIcon(ICON.get(this.type).get(state));
+      this.stateUpdate = true
+      this.state = state;
+      this.opacity = opacity;
 
+    }
   }
 
   display(map) {
 
-    this.marker.addTo(map);
+    if (this.stateUpdate == true) {
 
+      this.marker.setIcon(ICON.get(this.type).get(this.state));
+      this.marker.setOpacity(this.opacity);
+      this.marker.addTo(map);
+
+      this.stateUpdate = false
+
+    }
   }
-
 };
 
 module.exports = Signal;

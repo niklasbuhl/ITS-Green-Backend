@@ -14,8 +14,21 @@ class Session {
 
     this.intxns = [];
     this.intxnCircles = new Map();
-    this.nextInt = '';
-    this.nextIntSet = false;
+
+    // Next Signal
+    this.nextIntxn = '';
+    this.nextSignal = '';
+    this.nextSignalSet = false;
+    this.nextSignalNew = false;
+
+    // Next Signal State
+    this.nextSignalState = '';
+    this.nextSignalStateNew = false;
+
+    // Previous signal
+    this.prevIntxn = '';
+    this.prevSignal = '';
+    this.prevSignalSet = false;
 
   }
 
@@ -97,34 +110,80 @@ class Session {
     }
   }
 
-  displayNextIntxn(int) {
+  displayNextIntxn() {
 
-    if (!this.nextIntSet) this.nextInt = int;
+    // if (!this.nextIntSet) this.nextInt = int;
 
-    console.log(this.nextInt);
-    console.log(int);
+    // Check if next is set
+    if (!this.nextSignalSet) {
+      console.log("No next signal set...");
+      return;
 
-    console.log(this.intxnCircles.get(this.nextInt));
+    }
 
-    // Reset previous
-    this.intxnCircles.get(this.nextInt).setStyle({
-      opacity: 0.5,
-      fillOpacity: 0.0,
-      color: '#3388ff'
-    });
+    // Update Displays
+    if (this.nextSignalNew) {
+
+      if (this.prevSignalSet) {
+        // Reset previous
+        this.intxnCircles.get(this.prevIntxn).setStyle({
+          opacity: 0.5,
+          fillOpacity: 0.0,
+          color: '#3388ff'
+        });
+      }
+
+      // Update next
+      this.intxnCircles.get(this.nextIntxn).setStyle({
+        opacity: 1,
+        fillOpacity : 0.2,
+        color: '#00FF00'
+      });
+
+      this.nextSignalNew = false;
+
+    }
+
+    // console.log(int);
+
+    // console.log(this.intxnCircles.get(this.nextInt));
+
 
     // Update next int variable
-    this.nextInt = int;
+    // this.nextInt = int;
 
     // Set next
-    this.intxnCircles.get(this.nextInt).setStyle({
-      opacity: 1,
-      fillOpacity : 0.2,
-      color: '#00FF00'
-    });
 
-    this.nextIntSet = true;
 
+    // this.nextIntSet = true;
+
+
+  }
+
+  setNextSignal(int, sig) {
+
+    if (this.nextSignal != sig && this.nextInt != int) {
+
+      // Store previous signal
+      if (this.nextSignalSet) {
+        this.prevIntxn = this.nextIntxn
+        this.prevSignal = this.nextSignal
+        this.prevSignalSet = true
+      }
+
+      // Set new next signal
+      this.nextIntxn = int;
+      this.nextSignal = sig;
+
+      // Set flags
+      this.nextSignalNew = true;
+      this.nextSignalSet = true;
+
+    } else {
+
+      this.nextSignalNew = false;
+
+    }
 
   }
 

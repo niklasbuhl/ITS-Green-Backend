@@ -2,20 +2,23 @@ from world import CONFIG
 from utility import *
 from simulation import *
 from world import CONFIG
-# from math import abs
+
 import gpxpy
 import gpxpy.gpx
 import threading
 from operator import itemgetter, attrgetter, methodcaller
-#
+
 class SessionSignal:
 
-    def __init__(self, n, int, sig, nextInt, nextSig, nextDist, lastDist, course, nextCourse, lastCourse):
+    def __init__(self, n, int, sig, nextInt, nextSig, prevInt, prevSig, nextDist, lastDist, course, nextCourse, lastCourse):
+
         self.n= n
         self.int = int
         self.sig = sig
         self.nextInt = nextInt
         self.nextSig = nextSig
+        self.prevInt = prevInt
+        self.prevSig = prevSig
         self.nextDist = nextDist
         self.lastDist = lastDist
         self.course = course
@@ -23,6 +26,7 @@ class SessionSignal:
         self.lastCourse = lastCourse
         self.passed = False
         self.state = None
+        self.signalStateAndTTG = None
 
     def __repr__(self):
         return((
@@ -53,7 +57,7 @@ class SessionSignal:
         passed = self.passed
         state = self.state
 
-        print("S {0}\t{11}\tPassed: {10}\t [{1}][{2}] -> [{3}][{4}]\tnD: {5}m\tlD: {6}m\tC: {7}   \tnC: {8}   \tlC: {9}".format(
+        print("S {0}\t{11}\tPassed: {10}\t [{12}][{13}] -> <[{1}][{2}]> -> [{3}][{4}]\tnD: {5}m\tlD: {6}m\tC: {7}   \tnC: {8}   \tlC: {9}".format(
             self.n,
             self.int,
             self.sig,
@@ -65,8 +69,123 @@ class SessionSignal:
             self.nextCourse,
             self.lastCourse,
             self.passed,
-            self.state
+            self.state,
+            self.prevInt,
+            self.prevSig
         ))
+
+
+class SessionSpeed:
+
+    def __init__(self, beginMs, endMs, beginKmt, endKmt, beginS, endS):
+
+        # [None, reachThisLightSpeed, None, reachThisLightSpeedKmT, 0, timeOfGreenLight]
+
+        # print("\tCreating new Session Speed: {}, {}, {}, {}, {}, {}".format(
+        #     beginMs, endMs, beginKmt, endKmt, beginS, endS
+        # ))
+
+        # Begin/End
+        self.beginMs = beginMs
+        self.endMs = endMs
+        self.beginKmt = beginKmt
+        self.endKmt = endKmt
+        self.beginS = beginS
+        self.endS = endS
+
+        # Averages Speed
+        try:
+            self.avgMs = (beginMs + endMs) / 2
+            self.avgKmt = (beginKmt + endKmt) / 2
+
+        except:
+            self.avgMs = endMs
+            self.avgKmt = endKmt
+
+        # Changes in speed
+
+        # Possitive is increase speed, negative is decrease speed
+        self.beginSpeedChange = None
+        self.endSpeedChange = None
+        self.bikeSpeed = None
+
+        self.beginSpeedChangeMs = None
+        self.endSpeedChangeMs = None
+
+        self.beginSpeedChangeKmt = None
+        self.endSpeedChangeKmt = None
+
+        self.speedChange = None
+        self.relativeSpeedChange = None
+
+    def setSpeedChanges(self, beginSpeedChange, endSpeedChange):
+
+        # Ms
+        self.beginSpeedChangeMs = beginSpeedChange
+        self.endSpeedChangeMs = endSpeedChange
+
+        # Kmt
+        self.beginSpeedChangeKmt = msToKmt(beginSpeedChange)
+        self.endSpeedChangeKmt = msToKmt(endSpeedChange)
+
+    def setBikeSpeed(self, speed):
+        self.bikeSpeed = speed
+
+    def info(self):
+
+        bikeSpeed = None
+        beginSpeedChangeMsKmt = None
+        beginKmt = None
+        endKmt = None
+        endSpeedChangeMsKmt = None
+        speedChange = None
+        relativeSpeedChange = None
+
+        try: bikeSpeed = round(self.bikeSpeed, 1)
+        except: bikeSpeed = None
+        try: beginSpeedChangeMsKmt = round(self.beginSpeedChangeKmt, 1)
+        except: beginSpeedChangeMsKmt = None
+        try: beginKmt = round(self.beginKmt, 1)
+        except: beginKmt = None
+        try: endKmt = round(self.endKmt, 1)
+        except: endKmt = None
+        try: endSpeedChangeMsKmt = round(self.endSpeedChangeKmt, 1)
+        except: endSpeedChangeMsKmt = None
+        try: speedChange = round(self.speedChange, 1)
+        except: speedChange = None
+        try: relativeSpeedChange = round(self.relativeSpeedChange, 1)
+        except: relativeSpeedChange = None
+
+        # SessionSpeed: [BikeSpeed] [ToBegin] []-[] [ToEnd]
+        info = "SessionSpeed:\t[{0}]\t{1}\t[{2}]-[{3}]\t{4}\t[{5}]\t({6})".format(
+            bikeSpeed,
+            beginSpeedChangeMsKmt,
+            beginKmt,
+            endKmt,
+            endSpeedChangeMsKmt,
+            speedChange,
+            relativeSpeedChange
+        )
+
+        # print(info)
+
+        return info
+
+    def calcSpeedChange(self):
+
+        if self.beginKmt is None: self.speedChange = self.endSpeedChangeKmt
+
+        elif self.beginSpeedChangeKmt > 0 and self.endSpeedChangeKmt > 0:
+            self.speedChange = min(self.beginSpeedChangeKmt, self.endSpeedChangeKmt)
+
+        elif self.beginSpeedChangeKmt < 0 and self.endSpeedChangeKmt < 0:
+            self.speedChange = max(self.beginSpeedChangeKmt, self.endSpeedChangeKmt)
+
+        else:
+            self.speedChange = 0
+
+        self.relativeSpeedChange = abs(self.speedChange)
+
 
 
 class Session:
@@ -91,7 +210,7 @@ class Session:
         self.routeSignals = []
 
         # [tntId, sigId, state, lastUpdated, # in route]
-        self.nextSignal = []
+        # self.nextSignal = []
 
         # [targetSpeed, speedDifference, color]
         self.SpeedTarget = None
@@ -101,12 +220,13 @@ class Session:
         # Signal
         self.lastSignal = None
         self.nextSignal = None
-        self.nextSignalState = None
+        # self.nextSignalStateAndTTG = None
 
 
         # Route
         self.routeBegun = False
         self.routeFinished = False
+        self.routeSignalStatesAndTTG = None
 
 
     def loadRouteGPX(self, gpx):
@@ -133,13 +253,22 @@ class Session:
 
         arrayLength = len(tempIntAndSigArray)
 
+        print(tempIntAndSigArray)
+
+        print("Intersection Count: {0}".format(arrayLength))
+
         # print(arrayLength)
         # firstSignal = True
         # lastSignal = False
 
+        print(sim.intxns)
+
         lastSignal = tempIntAndSigArray[arrayLength - 1]
         lastInt = lastSignal[0]
         lastSig = lastSignal[1]
+
+        print("Last Signal: {0}".format(lastSignal))
+
         lastIntLocation = sim.getIntersection(lastInt).loc
         lastSigCourse = sim.getSignal(lastInt, lastSig).course
 
@@ -176,12 +305,25 @@ class Session:
             nextInt = None
             nextSig = None
             nextCourse = None
+            nextDist = 0
+
+            prevInt = None
+            prevSig = None
 
             dist = 0
 
             intLocation = sim.getIntersection(int).loc
 
             course = sim.getSignal(int, sig).course
+
+            try:
+
+                if (i - 1) >= 0: prevSignal = tempIntAndSigArray[i - 1]
+                prevInt = prevSignal[0]
+                prevSig = prevSignal[1]
+
+            except:
+                pass
 
             try:
 
@@ -220,7 +362,7 @@ class Session:
 
             lastCourse = course - lastSigCourse
 
-            tempSessionSignal = SessionSignal(i, int, sig, nextInt, nextSig, nextDist, lastDist, course, nextCourse, lastCourse)
+            tempSessionSignal = SessionSignal(i, int, sig, nextInt, nextSig, prevInt, prevSig, nextDist, lastDist, course, nextCourse, lastCourse)
 
             self.routeIntAndSignals.append(tempSessionSignal)
 
@@ -233,25 +375,7 @@ class Session:
         for signal in tempIntAndSigArray: self.routeIntxns.append(signal[0])
         for signal in tempIntAndSigArray: self.routeSignals.append([signal[0], signal[1]])
 
-        for signal in self.routeIntAndSignals:
-
-            # print(signal)
-            signal.print()
-
-            # n = signal.n
-            # int = signal.int
-            # sig = signal.sig
-            # nextInt = signal.nextInt
-            # nextSig = signal.nextSig
-            # nextDist = round(signal.nextDist, 2)
-            # lastDist = round(signal.lastDist, 2)
-            # course = signal.course
-            # nextCourse = signal.nextCourse
-            # lastCourse = signal.lastCourse
-            # passed = signal.passed
-            #
-            # print("S {0}\tPassed: {10}\t [{1}][{2}] -> [{3}][{4}]\tnD: {5}m\tlD: {6}m\tC: {7}   \tnC: {8}   \tlC: {9}".format(n, int, sig, nextInt, nextSig, nextDist, lastDist, course, nextCourse, lastCourse, passed))
-
+        for signal in self.routeIntAndSignals: signal.print()
 
         print("\n")
 
@@ -264,9 +388,15 @@ class Session:
 
     def getRouteSignals(self): return self.routeSignals
 
-
     def calcNextSignal(self, sim):
-        print("\n\nCalculating Next Signal\n")
+
+        if CONFIG['debug']['session']['calcNextSignal']:
+
+            print("\n# ------------------------------------------------------")
+            print("# Calculating Next Signal")
+            print("# ------------------------------------------------------\n")
+
+        self.couldFindNextSignal = False
 
         # Get bicycle location
         bicycleLoc = self.bicycle.loc
@@ -274,12 +404,19 @@ class Session:
         # Get current next signal
         testNextSignal = self.nextSignal
 
-        while(not self.routeFinished):
+        while(not self.couldFindNextSignal):
+
+            firstSignal = False
+            nextSignalInfront = False
+            nextSignalCloserThanNextAndPrevious = False
+
+            closestSignal = None
+            secondClosestSignal = None
 
             # Get the current next signal location from sim
             nextSignalLoc = sim.getIntersection(testNextSignal.int).loc
 
-            # Distance and angle between the bicycle and currentSignal
+            # Distance and angle between the bicycle and current next signal
             dist = getDistanceFromLatLonInM(
                 bicycleLoc.lat,
                 bicycleLoc.lon,
@@ -287,6 +424,7 @@ class Session:
                 nextSignalLoc.lon
             )
 
+            # Angle between the bicycle and current next signal
             angle = getCourseFromLatLonInDegrees(
                 bicycleLoc.lat,
                 bicycleLoc.lon,
@@ -294,87 +432,520 @@ class Session:
                 nextSignalLoc.lon
             )
 
-            print("Distance: {0}\tAngle: {1}".format(dist, angle))
+            # Bicycle angle
+            bicycleAngle = self.bicycle.course
+
+            # Get the absolute angle difference between the current next signal and the bicycle
+            # angleDifference = abs(angle - self.bicycle.course) % 360
+
+            # Shouldn't be able to be more than 180 degrees
+            angleDifference = abs(angle - self.bicycle.course) % 360
+
+            if angleDifference > 180: angleDifference = 180 - (angleDifference % 180)
+
+            # Print everything
+            if CONFIG['debug']['session']['calcNextSignal']:
+                print("Distance: {0}\tAngle: {1}, Bicycle Angle: {2}, Angle Differnce: {3}".format(dist, angle, bicycleAngle, angleDifference))
 
             # Check if the current next signal is still in front of the bicyclist
-            angleDifference = abs(angle - self.bicycle.course) % 180
+            # Check if the next signal is in front of the bicyclist
 
+
+            # ------------------------------------------------------------------
+            # Test 1, see if the next signal is in front
+            # ------------------------------------------------------------------
             if angleDifference < 90:
 
-                print("Signal is in front.")
-                self.nextSignal = testNextSignal
+                if CONFIG['debug']['session']['calcNextSignal']:
+                    print("Signal is in front.")
+
+                # Check if the signal is less meters away than between the signals
+
+
                 nextSignalInfront = True
+
+            else:
+                if CONFIG['debug']['session']['calcNextSignal']:
+                    print("Signal is in the back.")
+
+                nextSignalInfront = False
+
+            # ------------------------------------------------------------------
+            # Test 2, try to get the distance between the next signal and previous signal
+            # ------------------------------------------------------------------
+            # Check if it makes sense the intersection is that one
+
+            try:
+                if CONFIG['debug']['session']['calcNextSignal']:
+                    print("Previous signal.")
+
+                prevSignalLoc = sim.getIntersection(testNextSignal.prevInt).loc
+
+                prevDist = getDistanceFromLatLonInM(
+                    prevSignalLoc.lat,
+                    prevSignalLoc.lon,
+                    nextSignalLoc.lat,
+                    nextSignalLoc.lon
+                )
+
+                if CONFIG['debug']['session']['calcNextSignal']:
+                    print("Distance between next and previous signals: {0}".format(round(prevDist, 2)))
+
+                if prevDist > dist:
+                    if CONFIG['debug']['session']['calcNextSignal']:
+                        print("Distance bicycle to next signal is less than the distance between next signal and previous signal.")
+
+                    nextSignalCloserThanNextAndPrevious = True
+
+            except:
+                if CONFIG['debug']['session']['calcNextSignal']:
+                    print("This is the first signal")
+
+                firstSignal = True
+
+            # ------------------------------------------------------------------
+            # Result, return if next signal is really the next signal
+            # ------------------------------------------------------------------
+
+            if nextSignalInfront and (nextSignalCloserThanNextAndPrevious or firstSignal):
+
+                if CONFIG['debug']['session']['calcNextSignal']:
+                    print("Found signal!")
+
+                self.bicycle.distanceToNXS = dist
+                self.nextSignal = testNextSignal
+
                 return
 
             else:
 
+                # Test the next signal
                 try:
                     testNextSignal = self.routeIntAndSignals[testNextSignal.n + 1]
+
                 except:
+
                     # Last signal
-                    self.routeFinished = True
-                    return
+                    if CONFIG['debug']['session']['calcNextSignal']:
+                        print("Couldn't find a next signal, possible something is very wrong or the route is finished.")
 
-                print("Signal is in the back.")
+                    self.couldFindNextSignal = True
 
 
+        # If there is no signals in front of the bicyclist do something...
 
-        # Check if the next signal is in front of the bicyclist
-
-            # If there is no signals in front of the bicyclist do something...
-
+        # Fint the two closest signals
         # Check if which route AB the bicyclist is on
 
-        # Check if it makes sense the intersection is that one
+        # If the first one is closest continue
+        # If the closest is the last one and the second closest if further away from the last one, route is finished, else the
+        return
 
-        # Check if (more things)
+    def calcNextSignalStateAndTTG(self, sim):
 
-        # Get the state of the next signal
+        if CONFIG['debug']['session']['calcNextSignalStateAndTTG']:
+            print("\n# -------------------------------------------")
+            print("# Calculating Next Signal State And TTG")
+            print("# -------------------------------------------\n")
 
-        # Return [id][state]
+        self.nextSignal.signalStateAndTTG = sim.calcSignalStateAndTTG(self.nextSignal.int, self.nextSignal.sig, False)
 
-    def calcNextSignalState(self, sim): self.nextSignalState = sim.getSignal(self.nextSignal.int, self.nextSignal.sig).getState()
-
-    def getNextSignalState(self): return self.nextSignalState
+    def getNextSignalStateAndTTG(self): return self.nextSignalStateAndTTG
 
     def getNextSignal(self): return [self.nextSignal.int, self.nextSignal.sig]
 
+    def calcBicycleTargetSpeedAndColor(self, sim):
 
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\n# -------------------------------------------")
+            print("# Calculating Bicycle Target Speed And Color")
+            print("# -------------------------------------------\n")
 
-
-
-    def calcBicycleSpeed(self, sim):
-        print("\n\nCalculating Speed\n")
         # Current speed
 
         # Get bicycle location
+        bikeLat = self.bicycle.loc.lat
+        bikeLon = self.bicycle.loc.lon
+
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\tBicycle \t\tLocation: {0}, {1}".format(bikeLat, bikeLon))
 
         # Get next signal from sim
+        intId = self.nextSignal.int
+        sigId = self.nextSignal.sig
+
+        sigLoc = sim.getIntersection(intId).loc
+
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\tNext Signal: [{0}][{1}] Location: {2}, {3}".format(intId, sigId, sigLoc.lat, sigLoc.lon))
 
         # Get distance
+        distance = getDistanceFromLatLonInM(
+            bikeLat, bikeLon, sigLoc.lat, sigLoc.lon
+        )
+
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\tDistance between bicycle and signal: {0}m".format(round(distance,1)))
 
         # Get current speed
+        bikeSpeed = self.bicycle.speed
 
-        # Get next signal green "slots"
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\tCurrent bicycle speed: {0}m/s\n".format(bikeSpeed))
 
-        # Calculate array of possible speeds
+        # Get next signal time to green "slots"
+        signalStateAndTTG = sim.calcSignalStateAndTTG(intId, sigId, False)
 
-        # Get the one closest to the current speed
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\tSignal State:\n")
 
-        # Calculate targeted speed
-        self.speedTarget = 25
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\t{0}\t{1}\t{2}\t{3}".format(
+                signalStateAndTTG.state,
+                signalStateAndTTG.ttg,
+                signalStateAndTTG.gts,
+                signalStateAndTTG.revolution
+            ))
 
-        # Calculate the speed difference
-        self.speedDifference = 0
+        currentlyGreen = False
+        timeOfGreenLight = 0
 
-        # Calculate the color
-        self.speedColor = [0,0,0]
 
-    def getSpeedColor(self): return self.speedColor
+        speeds = []
 
-    def getSpeedTarget(self): return self.speedTarget
+        if signalStateAndTTG.ttg < 0:
+            currentlyGreen = True
+            timeOfGreenLight = signalStateAndTTG.gts + signalStateAndTTG.ttg
 
-    def getSpeedDiffernce(self): return self.speedDifference
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\tIt is currently green light for another {0} seconds.".format(timeOfGreenLight))
+
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\n\tCalculating Speeds:")
+            print("\n\t[BEGIN m/s]\t[END m/s]\t[BEGIN km/t]\t[END km/t]\t[FROM s]\t[TO s]")
+
+        if currentlyGreen and timeOfGreenLight != 0:
+
+            reachThisLightSpeed = distance / timeOfGreenLight
+            reachThisLightSpeedKmT = msToKmt(reachThisLightSpeed)
+
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\t[~3*10^8 m/s]\t[{0} m/s]\t[Lightspeed]\t[{1} km/t]\t[Now]\t\t[{2} s]".format(
+                    round(reachThisLightSpeed, 1),
+                    round(reachThisLightSpeedKmT, 1),
+                    timeOfGreenLight
+                ))
+
+            # possibleSpeed = [None, reachThisLightSpeed, None, reachThisLightSpeedKmT, 0, timeOfGreenLight]
+            possibleSpeed = SessionSpeed(None, reachThisLightSpeed, None, reachThisLightSpeedKmT, 0, timeOfGreenLight)
+
+            possibleSpeed.bikeSpeed = bikeSpeed
+
+            speeds.append(possibleSpeed)
+
+        gts = signalStateAndTTG.gts
+
+        revolution = signalStateAndTTG.revolution
+        ttgNextBegin = signalStateAndTTG.ttg
+        ttgNextEnd = ttgNextBegin + gts
+
+        if currentlyGreen:
+            ttgNextBegin = ttgNextBegin + revolution
+            ttgNextEnd = ttgNextEnd + revolution
+
+        if ttgNextBegin == 0 or ttgNextEnd == 0:
+            ttgNextBegin = ttgNextBegin + revolution
+            ttgNextEnd = ttgNextEnd + revolution
+
+        beginSpeedMS = distance / ttgNextBegin
+        endSpeedMS = distance / ttgNextEnd
+
+        beginSpeedKmt = msToKmt(beginSpeedMS)
+        endSpeedKmt = msToKmt(endSpeedMS)
+
+        maxMS = 100/60/60*1000 # 1000 km/t
+        minMS = 1
+
+        while(endSpeedMS > 1):
+
+            # possibleSpeed = [beginSpeedMS, endSpeedMS, beginSpeedKmt, endSpeedKmt, ttgNextBegin, ttgNextEnd]
+            possibleSpeed = SessionSpeed(beginSpeedMS, endSpeedMS, beginSpeedKmt, endSpeedKmt, ttgNextBegin, ttgNextEnd)
+
+            possibleSpeed.bikeSpeed = bikeSpeed
+
+            speeds.append(possibleSpeed)
+
+            # print("\t[{0} m/s]\t[{1} m/s]\t[{2} km/t]\t[{3} km/t]\t[{4} s]\t\t[{5} s]".format(
+            #     round(beginSpeedMS, 1),
+            #     round(endSpeedMS, 1),
+            #     round(beginSpeedKmt, 1),
+            #     round(endSpeedKmt, 1),
+            #     ttgNextBegin,
+            #     ttgNextEnd
+            # ))
+
+            # Calculate Next Time Span
+            ttgNextBegin = ttgNextBegin + revolution
+            ttgNextEnd = ttgNextEnd + revolution
+
+            # Calculate Next Speeds
+            beginSpeedMS = distance / ttgNextBegin
+            endSpeedMS = distance / ttgNextEnd
+
+            # Calculate Km/t
+            beginSpeedKmt = msToKmt(beginSpeedMS)
+            endSpeedKmt = msToKmt(endSpeedMS)
+
+
+        # Print all speeds
+        # for possibleSpeed in speeds:
+
+            # if(possibleSpeed.beginMs == None): continue
+
+            # possibleSpeed.info()
+
+            # print("\t[{0} m/s]\t[{1} m/s]\t[{2} km/t]\t[{3} km/t]\t[{4} s]\t\t[{5} s]".format(
+            #     round(possibleSpeed[0], 1),
+            #     round(possibleSpeed[1], 1),
+            #     round(possibleSpeed[2], 1),
+            #     round(possibleSpeed[3], 1),
+            #     possibleSpeed[4],
+            #     possibleSpeed[5]
+            # ))
+
+        # Find out if the current speed is between
+        currentSpeedInGreenTimespan = False
+
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\n")
+
+        speedDifferences = []
+
+        for possibleSpeed in speeds:
+
+            possibleSpeedDifferenceA = 0
+            possibleSpeedDifferenceB = 0
+
+            # If the next signal is currently green, this is the first
+            if(possibleSpeed.beginMs == None):
+
+                possibleSpeed.beginSpeedChangeKmt = possibleSpeed.endKmt - bikeSpeed
+                possibleSpeed.endSpeedChangeKmt = possibleSpeed.endKmt - bikeSpeed
+
+                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                    print("\t{0}".format(possibleSpeed.info()))
+
+                # print("\tTesting:\t\t\t\t[{0}]\t{1}\t[{2}]".format(
+                #     round(bikeSpeed,1),
+                #     round(possibleSpeedDifferenceA, 1),
+                #     round(possibleSpeed[3],1)
+                # ))
+
+                if bikeSpeed > possibleSpeed.endKmt:
+                    currentSpeedInGreenTimespan = True
+                    break
+
+                continue
+
+            possibleSpeed.beginSpeedChangeKmt = possibleSpeed.beginKmt - bikeSpeed
+            possibleSpeed.endSpeedChangeKmt = possibleSpeed.endKmt - bikeSpeed
+            # avgSpeed = (possibleSpeed[2] + possibleSpeed[3]) / 2
+            # possibleAvgDifference = avgSpeed - bikeSpeed
+
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\t{0}".format(possibleSpeed.info()))
+
+            # Testing next speed
+
+
+            # print("\tTesting:\t[{0}]\t{1}\t\t[{2}]({3})[{4}]\t{5}\t\t{6}".format(
+            #     round(bikeSpeed,1),
+            #     round(possibleSpeedDifferenceA, 1),
+            #     round(possibleSpeed[2],1),
+            #     round(avgSpeed,1),
+            #     round(possibleSpeed[3],1),
+            #     round(possibleSpeedDifferenceB, 1),
+            #     possibleAvgDifference
+            # ))
+
+            # possibleSpeed.append()
+
+            if bikeSpeed < possibleSpeed.beginKmt and bikeSpeed > possibleSpeed.endKmt:
+                currentSpeedInGreenTimespan = True
+                break
+
+
+
+        if currentSpeedInGreenTimespan:
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\n\tThis is a green speed!")
+
+            self.bicycle.speedChange = 0
+            self.bicycle.targetSpeed = bikeSpeed
+            self.bicycle.deviceColor[0] = 0
+            self.bicycle.deviceColor[1] = 255
+            self.bicycle.deviceColor[2] = 0
+
+            return
+
+        else:
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\n\tThis not a green speed!\n")
+
+        for possibleSpeed in speeds:
+
+            possibleSpeed.calcSpeedChange()
+
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\t{0}".format(possibleSpeed.info()))
+
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\n\tSorting Array\n")
+
+        # Sort array after differences
+        speeds = sorted(speeds, key=attrgetter('relativeSpeedChange'))
+
+        maxUpSpeedChange = bikeSpeed * 0.1
+
+        for possibleSpeed in speeds:
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\t{0}".format(possibleSpeed.info()))
+
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\n\tFinding the Speed\n")
+
+        for possibleSpeed in speeds:
+
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\t{0}".format(possibleSpeed.info()))
+
+            if possibleSpeed.speedChange > 0:
+                if possibleSpeed.speedChange < maxUpSpeedChange:
+                    if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                        print("\tThis is the speed!")
+
+                    self.bicycle.speedChange = possibleSpeed.speedChange
+                    break
+
+                else:
+
+                    continue
+
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\tThis is the speed!")
+
+            self.bicycle.speedChange = possibleSpeed.speedChange
+
+            break
+
+        # Bicycle must increase speed
+        if self.bicycle.speedChange > 0:
+
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\tBike must increase speed by {0}!".format(self.bicycle.speedChange))
+
+            # Red
+            red = int(translate(self.bicycle.speedChange, 0, maxUpSpeedChange, 0, 255))
+
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\tRed: {0}".format(red))
+
+            self.bicycle.deviceColor[0] = red
+
+            # Green
+            self.bicycle.deviceColor[1] = 255 - red
+
+            # Blue
+            self.bicycle.deviceColor[2] = 0
+
+        # Bicycle must decrease speed
+        elif self.bicycle.speedChange < 0:
+
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\tBike must decrease speed by {0}!".format(self.bicycle.speedChange))
+
+            if abs(self.bicycle.speedChange) > maxUpSpeedChange:
+
+                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                    print("\tBike must decrease speed by more than max! (Blue)")
+
+                # Red
+                self.bicycle.deviceColor[0] = 0
+
+                # Green
+                self.bicycle.deviceColor[1] = 0
+
+                # Blue
+                self.bicycle.deviceColor[2] = 255
+
+            else:
+
+                # Blue
+                blue = int(translate(abs(self.bicycle.speedChange), 0, maxUpSpeedChange, 0, 255))
+
+                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                    print("\tBlue: {0}".format(blue))
+
+                self.bicycle.deviceColor[2] = blue
+
+                # Green
+                self.bicycle.deviceColor[1] = 255 - blue
+
+                # Red
+                self.bicycle.deviceColor[0] = 0
+
+        # No speed change
+        else:
+
+            # Red
+            self.bicycle.deviceColor[0] = 0
+
+            # Green
+            self.bicycle.deviceColor[1] = 255
+
+            # Blue
+            self.bicycle.deviceColor[2] = 0
+
+
+        self.bicycle.targetSpeed = bikeSpeed + self.bicycle.speedChange
+
+        return
+
+
+
+    def getBicycleTargetSpeedAndColor(self):
+
+        print("# -----------------------------------------------------------")
+        print("# Bicycle")
+        print("# -----------------------------------------------------------\n")
+
+        print("\tDevice Color:\t\t\t[{0}, {1}, {2}]".format(
+            self.bicycle.deviceColor[0],
+            self.bicycle.deviceColor[1],
+            self.bicycle.deviceColor[2]
+        ))
+        print("\tCourse:\t\t\t\t{0}°".format(self.bicycle.course))
+        print("\tSpeed:\t\t\t\t{0} km/t".format(self.bicycle.speed))
+        print("\tSpeed Change:\t\t\t{0} km/t".format(round(self.bicycle.speedChange, 1)))
+        print("\tTarget Speed:\t\t\t{0} km/t".format(round(self.bicycle.targetSpeed, 1)))
+        print("\tDistance to next signal:\t{0} m".format(round(self.bicycle.distanceToNXS, 1)))
+
+    def getNextSignalStateAndTTG(self):
+
+        print("\n# -----------------------------------------------------------")
+        print("# Next Signal And State")
+        print("# -----------------------------------------------------------\n")
+
+        print("\tInt: {0}".format(self.nextSignal.int))
+        print("\tSig: {0}".format(self.nextSignal.sig))
+        print("\tState: {0}".format(self.nextSignal.signalStateAndTTG.state))
+        print("\tTime To Green: {0}".format(self.nextSignal.signalStateAndTTG.ttg))
+        print("\tGreen Time Span: {0}".format(self.nextSignal.signalStateAndTTG.gts))
+        print("\tRevolution: {0}\n".format(self.nextSignal.signalStateAndTTG.revolution))
+
+
+
+        return self.nextSignal.signalStateAndTTG
 
     def getNextFiveSignals(self):
         array = [None, None, None, None, None]
@@ -399,8 +970,6 @@ class Session:
         for signal in self.routeIntAndSignals:
             sim.getSignal(signal.int, signal.sig).update()
 
-            pass
-
     def getAllSignalStates(self, sim): return self.routeSignalStates
 
 class SessionUpdate:
@@ -424,6 +993,10 @@ class Bicycle:
         self.speed = speed
         self.course = course
         self.updated = 0
+        self.deviceColor = [0, 255, 0]
+        self.targetSpeed = speed
+        self.distanceToNXS = 0
+        self.speedChange = 0
 
     def setUpdated(self, updated): self.updated = updated
     def getUpdated(self): return self.updated
@@ -436,6 +1009,12 @@ class Bicycle:
 
     def setCourse(self, course): self.course = course
     def getCourse(self): return self.course
+
+    def setDeviceColor(self, r, g, b): self.deviceColor = [r, g, b]
+    def getDeviceColor(self): return self.deviceColor
+
+    def setTargetSpeed(self, speed): self.targetSpeed = speed
+    def getTargetSpeed(self): return self.targetSpeed
 
 class RouteSignal:
 
@@ -554,9 +1133,9 @@ class Route:
                     foundSignals = []
 
                     # Check intersections
-                    for int in intxns:
+                    for intxn in intxns:
 
-                        intLoc = intxns[int].getLocation();
+                        intLoc = intxns[intxn].getLocation();
 
                         intDistanceA = getDistanceFromLatLonInM(point.latitude, point.longitude, intLoc.lat, intLoc.lon)
                         intDistanceA = round(intDistanceA, 2)
@@ -566,9 +1145,9 @@ class Route:
 
                         if intDistanceA < distance and intDistanceB < distance:
 
-                                self.intxnsOnRoute.append(int)
+                                self.intxnsOnRoute.append(intxn)
 
-                                intxnId = intxns[int].id
+                                intxnId = intxns[intxn].intxnId
 
                                 if CONFIG['debug']['route']['findingSignals']:
                                     # print(f"A: {intDistanceA}, B: {intDistanceA}")
@@ -582,9 +1161,9 @@ class Route:
                                     message = "Bicycle course: " + str(bicycleCourse) + "."
                                     print(message)
 
-                                for sig in intxns[int].signals:
+                                for signal in intxns[intxn].signals:
 
-                                    signalCourse = intxns[int].signals[sig].course
+                                    signalCourse = intxns[intxn].signals[signal].course
 
                                     if CONFIG['debug']['route']['findingSignals']:
                                         # print(f"Sig Course: {signalCourse}")
@@ -596,18 +1175,18 @@ class Route:
                                         if CONFIG['debug']['route']['findingSignals']:
                                             print("This signal!")
 
-                                        sigId = intxns[int].signals[sig].id
+                                        sigId = intxns[intxn].signals[signal].sigId
 
                                         sigIntId = intxnId+sigId
 
                                         if CONFIG['debug']['route']['findingSignals']:
                                             print(sigIntId)
 
-                                        signal = RouteSignal(intxnId, sigId, intxns[int].getLocation(), 0)
+                                        routeSignal = RouteSignal(intxnId, sigId, intxns[intxn].getLocation(), 0)
 
-                                        self.signals[sigIntId] = signal
+                                        self.signals[sigIntId] = routeSignal
 
-                                        SignalDistanceFromA = round(signal.distanceToPoint(point.latitude, point.longitude), 2)
+                                        SignalDistanceFromA = round(routeSignal.distanceToPoint(point.latitude, point.longitude), 2)
 
                                         foundSignals.append([sigIntId, SignalDistanceFromA])
 
@@ -623,8 +1202,6 @@ class Route:
                         self.sigsOnRoute.append(signal[0])
 
                     # Check signals of those intersections
-
-
 
                 if CONFIG['debug']['route']['findingSignals']:
                     print('Point at ({0},{1}) -> {2}'.format(point.latitude, point.longitude, point.elevation))
