@@ -379,7 +379,7 @@ function startLoops() {
 
 $(document).ready(setup());
 
-$(document).ready(startLoops());
+// $(document).ready(startLoops());
 
 },{"./javascript/bicycle.js":2,"./javascript/intersection.js":3,"./javascript/route.js":4,"./javascript/session.js":5,"./javascript/signal.js":6,"./javascript/simulation.js":7,"./json/api.json":8,"./json/frontendconfig.json":9,"jquery":10,"leaflet-rotatedmarker":11}],2:[function(require,module,exports){
 // -----------------------------------------------------------------------------
