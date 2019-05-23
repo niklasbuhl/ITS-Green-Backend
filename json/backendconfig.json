@@ -20,7 +20,7 @@
     "route" : {
       "findingSignals" : false
     },
-    "setbicycle" : false
+    "setbicycle" : true
   },
 
   "test" : {

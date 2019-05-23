@@ -123,18 +123,20 @@ def sessionSetBicycle():
         print("\n")
 
     # Time
-    sesh.bicycle.setUpdated(content['time'])
+    sesh.bicycle.setUpdated(int(content['time']))
 
     # Location
-    sesh.bicycle.setLocation(Location(content['latitude'], content['longitude']))
+    sesh.bicycle.setLocation(Location(
+        float(content['latitude']), float(content['longitude'])
+    ))
 
     # Speed
     if content['speed'] != -1:
-        speed = msToKmt(content['speed'])
+        speed = msToKmt(float(content['speed']))
         sesh.bicycle.setSpeed(speed)
 
     # Course
-    sesh.bicycle.setCourse(content['course'])
+    sesh.bicycle.setCourse(float(content['course']))
 
     # Set Calculate Thread Flag
     # ???
