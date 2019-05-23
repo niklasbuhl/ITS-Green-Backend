@@ -924,7 +924,7 @@ class Session:
             self.bicycle.deviceColor[1],
             self.bicycle.deviceColor[2]
         ))
-        print("\tCourse:\t\t\t\t{0}°".format(self.bicycle.course))
+        print("\tCourse:\t\t\t\t{0} degrees".format(self.bicycle.course))
         print("\tSpeed:\t\t\t\t{0} km/t".format(self.bicycle.speed))
         print("\tSpeed Change:\t\t\t{0} km/t".format(round(self.bicycle.speedChange, 1)))
         print("\tTarget Speed:\t\t\t{0} km/t".format(round(self.bicycle.targetSpeed, 1)))
