@@ -378,4 +378,4 @@ function startLoops() {
 
 $(document).ready(setup());
 
-$(document).ready(startLoops());
+// $(document).ready(startLoops());
