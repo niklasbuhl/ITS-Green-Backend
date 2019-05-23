@@ -129,7 +129,9 @@ def sessionSetBicycle():
     sesh.bicycle.setLocation(Location(content['latitude'], content['longitude']))
 
     # Speed
-    if content['speed'] != -1: sesh.bicycle.setSpeed(content['speed'])
+    if content['speed'] != -1:
+        speed = msToKmt(content['speed'])
+        sesh.bicycle.setSpeed(speed)
 
     # Course
     sesh.bicycle.setCourse(content['course'])

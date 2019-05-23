@@ -10,27 +10,26 @@
       "calcNextSignal" : false
     },
 
-    "loadingJSON" : true,
-    "application" : true,
-    "intersection" : true,
-    "intersectionGetData" : true,
-    "signal" : true,
-    "signalTiming" : true,
-    "signalState" : true,
+    "loadingJSON" : false,
+    "application" : false,
+    "intersection" : false,
+    "intersectionGetData" : false,
+    "signal" : false,
+    "signalTiming" : false,
+    "signalState" : false,
     "route" : {
-      "findingSignals" : true
+      "findingSignals" : false
     },
-    "setbicycle" : true
+    "setbicycle" : false
   },
 
   "test" : {
-    "simulation" : true
+    "simulation" : false
   },
 
   "data" : {
     "intxns" : {
-      "jsonpath" : "./json/noerrebrogade-frederikssundvej-intersections-real-timing.json",
-      "realtiming" : false
+      "jsonpath" : "./json/noerrebrogade-frederikssundvej-intersections-real-timing.json"
     }
   },
 
