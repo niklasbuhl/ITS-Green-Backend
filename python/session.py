@@ -915,37 +915,50 @@ class Session:
 
     def getBicycleTargetSpeedAndColor(self):
 
-        print("# -----------------------------------------------------------")
-        print("# Bicycle")
-        print("# -----------------------------------------------------------\n")
+        message = ""
 
-        print("\tDevice Color:\t\t\t[{0}, {1}, {2}]".format(
-            self.bicycle.deviceColor[0],
-            self.bicycle.deviceColor[1],
-            self.bicycle.deviceColor[2]
-        ))
-        print("\tCourse:\t\t\t\t{0} degrees".format(self.bicycle.course))
-        print("\tSpeed:\t\t\t\t{0} km/t".format(self.bicycle.speed))
-        print("\tSpeed Change:\t\t\t{0} km/t".format(round(self.bicycle.speedChange, 1)))
-        print("\tTarget Speed:\t\t\t{0} km/t".format(round(self.bicycle.targetSpeed, 1)))
-        print("\tDistance to next signal:\t{0} m".format(round(self.bicycle.distanceToNXS, 1)))
+        #message = message + "\n# -----------------------------------------------------------\n"
+        #message = message + "# Bicycle\n"
+        #message = message + "# -----------------------------------------------------------\n\n"
+        message = message + "\tDevice Color:\t\t\t[{0}, {1}, {2}]\n".format(self.bicycle.deviceColor[0], self.bicycle.deviceColor[1], self.bicycle.deviceColor[2])
+        message = message + "\tCourse:\t\t\t\t{0} degrees\n".format(self.bicycle.course)
+        message = message + "\tSpeed:\t\t\t\t{0} km/t\n".format(self.bicycle.speed)
+        message = message + "\tSpeed Change:\t\t\t{0} km/t\n".format(round(self.bicycle.speedChange, 1))
+        message = message + "\tTarget Speed:\t\t\t{0} km/t\n".format(round(self.bicycle.targetSpeed, 1))
+        message = message + "\tDistance to next signal:\t{0} m\n".format(round(self.bicycle.distanceToNXS, 1))
+
+        return {
+            "message" : message,
+            "deviceColor" : self.bicycle.deviceColor,
+            "course" : self.bicycle.course,
+            "speed" : self.bicycle.speed,
+            "speedChange" : self.bicycle.speedChange,
+            "distanceToNXS" : self.bicycle.distanceToNXS
+        }
 
     def getNextSignalStateAndTTG(self):
 
-        print("\n# -----------------------------------------------------------")
-        print("# Next Signal And State")
-        print("# -----------------------------------------------------------\n")
+        message = ""
 
-        print("\tInt: {0}".format(self.nextSignal.int))
-        print("\tSig: {0}".format(self.nextSignal.sig))
-        print("\tState: {0}".format(self.nextSignal.signalStateAndTTG.state))
-        print("\tTime To Green: {0}".format(self.nextSignal.signalStateAndTTG.ttg))
-        print("\tGreen Time Span: {0}".format(self.nextSignal.signalStateAndTTG.gts))
-        print("\tRevolution: {0}\n".format(self.nextSignal.signalStateAndTTG.revolution))
+        # message = message  + "\n# -----------------------------------------------------------\n"
+        # message = message  + "# Next Signal And State\n"
+        # message = message  + "# -----------------------------------------------------------\n\n"
+        message = message  + "\tInt: {0}\n".format(self.nextSignal.int)
+        message = message  + "\tSig: {0}\n".format(self.nextSignal.sig)
+        message = message  + "\tState: {0}\n".format(self.nextSignal.signalStateAndTTG.state)
+        message = message  + "\tTime To Green: {0}\n".format(self.nextSignal.signalStateAndTTG.ttg)
+        message = message  + "\tGreen Time Span: {0}\n".format(self.nextSignal.signalStateAndTTG.gts)
+        message = message  + "\tRevolution: {0}\n\n".format(self.nextSignal.signalStateAndTTG.revolution)
 
-
-
-        return self.nextSignal.signalStateAndTTG
+        return {
+            "message" : message,
+            "int" : self.nextSignal.int,
+            "sig" : self.nextSignal.sig,
+            "state" : self.nextSignal.signalStateAndTTG.state.name,
+            "ttg" : self.nextSignal.signalStateAndTTG.ttg,
+            "gts" : self.nextSignal.signalStateAndTTG.gts,
+            "revolution" : self.nextSignal.signalStateAndTTG.revolution
+        }
 
     def getNextFiveSignals(self):
         array = [None, None, None, None, None]

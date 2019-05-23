@@ -513,12 +513,8 @@ class Simulation():
 
         return signalStateAndTTGs
 
-    def calcAllSignalStateAndTTG(self):
+    def getAllSignalStatesAndTTG(self):
         # Used for testing purposes
-
-        print("\n# ----------------------------------------")
-        print("# Calculating Signal State and TTG!")
-        print("# ----------------------------------------\n")
 
         signalArray = [
          ['i02', 's02'],
@@ -539,15 +535,18 @@ class Simulation():
             newSignalStateData = self.intxns[signal[0]].calcSignalStateAndTTG(signal[1], False)
             signalStateData.append([signal[0], signal[1], newSignalStateData])
 
+        message = ""
+
         # [i02][s02]    STATE   TTG GTS REV
-        print("[INT][SIG]\tSTATE\t\t\tTTG \tGTS \tREV")
+        message = message + "[INT][SIG]\tSTATE\t\t\tTTG \tGTS \tREV\n"
         for signal in signalStateData:
-            print("[{0}][{1}]\t{2} \t{3}\t{4}\t{5}".format(
+            message = message + "[{0}][{1}]\t{2} \t{3}\t{4}\t{5}\n".format(
                 signal[0],
                 signal[1],
                 signal[2].state,
                 signal[2].ttg,
                 signal[2].gts,
                 signal[2].revolution
+            )
 
-            ))
+        return message

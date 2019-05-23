@@ -71,8 +71,7 @@ def mapPage():
 # Session
 @app.route(API['pages']['session'])
 def sessionPage():
-    pass
-    # return render_template("color.html")
+    return render_template("session.html")
 
 # Route Intersections
 @app.route(API['pages']['routeIntxns'])
@@ -86,15 +85,34 @@ def routeIntxnsPage():
 # Get a list of all intersections
 @app.route(API['sim']['getIntxns']['url'])
 def simulationGetIntersections():
+    global sim
+
     # intersections: id, location, signals: type, id, course
 
     # Return json with intersection data from all Intersections
     # id, location, signal
 
     # Create a JSON array
+
     json_data = sim.getIntxnsAndSignals()
 
     return jsonify(json_data)
+
+# Get information about all signals
+@app.route(API['sim']['getAllSignalStatesAndTTG']['url'])
+def getAllSignalStatesAndTTG():
+    global sim
+
+    # print("Hello World!")
+    #
+    # message = sim.calcAllSignalStateAndTTG()
+    #
+    # print(sim.getAllSignalStatesAndTTG())
+
+    # return jsonify(message = message)
+    return jsonify(
+        message = sim.getAllSignalStatesAndTTG()
+    )
 
 # ------------------------------------------------------------------------------
 # API: Session
@@ -200,11 +218,7 @@ def sessionGetNextSignalStateAndTTG():
     # Calculate Bicycle Target Speed And Color
     sesh.calcBicycleTargetSpeedAndColor(sim)
 
-    data = sesh.getNextSignalStateAndTTG()
-
-    # Do something with the data...
-
-    return ('', 204)
+    return jsonify(sesh.getNextSignalStateAndTTG())
 
 @app.route(API['session']['getBicycleTargetSpeedAndColor']['url'])
 def sessionGetBicycleTargetSpeedAndColor():
@@ -219,11 +233,7 @@ def sessionGetBicycleTargetSpeedAndColor():
     # Calculate Bicycle Target Speed And Color
     sesh.calcBicycleTargetSpeedAndColor(sim)
 
-    data = sesh.getBicycleTargetSpeedAndColor()
-
-    # Do something with the data...
-
-    return ('', 204)
+    return jsonify(sesh.getBicycleTargetSpeedAndColor())
 
 @app.route(API['session']['getRoute']['url'])
 def sessionGetRoute():
@@ -317,10 +327,13 @@ sesh.calcNextSignalStateAndTTG(sim)
 sesh.calcBicycleTargetSpeedAndColor(sim)
 
 # Get Bicycle Target Speed and Color
-sesh.getBicycleTargetSpeedAndColor()
+print(sesh.getBicycleTargetSpeedAndColor()['message'])
 
 # Get Next Signal State And TTG
-sesh.getNextSignalStateAndTTG()
+print(sesh.getNextSignalStateAndTTG()['message'])
+
+# Get All Signal State And TTG
+print(sim.getAllSignalStatesAndTTG())
 
 # Peace
 print("Peace out! {0} ms\n\n".format(ms() - now))

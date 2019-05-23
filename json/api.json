@@ -16,12 +16,16 @@
       "url" : "/api/sim/getintxnsn/"
     },
 
+    "getAllSignalStatesAndTTG" : {
+      "url" : "/api/sim/getallsignalstatesandttg/"
+    },
+
     "getSignalStateAll" : {
-      "url" : "/api/sim/getallss"
+      "url" : "/api/sim/getallss/"
     },
 
     "getSignalStateSpecified" : {
-      "url" : "/api/sim/getspecss",
+      "url" : "/api/sim/getspecss/",
       "args" : {
         "signalArray" : "array"
       }
