@@ -930,8 +930,8 @@ class Session:
 
                 else:
                     if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe slow down?")
-                    green = int((sin(piOffset) * 255 / 2) + 123)
-                    blue = int(cos(piOffset) * 255 / 2)
+                    blue = int(sin(piOffset) * 255 / 2)
+                    green = int((cos(piOffset) * 255 / 2) + 123)
 
             if finalSpeed.speedChange > 0:
 
