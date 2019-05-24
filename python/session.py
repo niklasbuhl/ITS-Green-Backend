@@ -900,39 +900,41 @@ class Session:
         # Calculate color
         # ----------------------------------------------------------------------
 
-        self.bicycle.speedChange = finalSpeed.speedChange
-        self.bicycle.targetSpeed = finalSpeed.targetSpeed
+        if CONFIG['session']['colorAlgoritm'] == "sinCosColor":
+            
+            self.bicycle.speedChange = finalSpeed.speedChange
+            self.bicycle.targetSpeed = finalSpeed.targetSpeed
 
-        differenceFromAvg = finalSpeed.avgKmt - finalSpeed.targetSpeed
-        avgOffset = (finalSpeed.beginKmt - finalSpeed.endKmt) / 2
+            differenceFromAvg = finalSpeed.avgKmt - finalSpeed.targetSpeed
+            avgOffset = (finalSpeed.beginKmt - finalSpeed.endKmt) / 2
 
-        percentOffset = abs(differenceFromAvg / avgOffset)
+            percentOffset = abs(differenceFromAvg / avgOffset)
 
-        if percentOffset > 1: percentOffset = 1
+            if percentOffset > 1: percentOffset = 1
 
-        piOffset = math.pi / 2 * percentOffset
+            piOffset = math.pi / 2 * percentOffset
 
-        red = 0
-        green = 0
-        blue = 0
+            red = 0
+            green = 0
+            blue = 0
 
-        if differenceFromAvg == 0:
-            green = 255
+            if differenceFromAvg == 0:
+                green = 255
 
-        if differenceFromAvg > 0:
-            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe speed up?")
-            red = int(sin(piOffset) * 255)
-            green = int(cos(piOffset) * 255)
+            if differenceFromAvg > 0:
+                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe speed up?")
+                red = int(sin(piOffset) * 255)
+                green = int(cos(piOffset) * 255)
 
-        else:
-            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe slow down?")
-            green = int(sin(piOffset) * 255)
-            blue = int(cos(piOffset) * 255)
-
-        cosRes = cos(piOffset)
-        sinRes = sin(piOffset)
+            else:
+                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe slow down?")
+                green = int(sin(piOffset) * 255)
+                blue = int(cos(piOffset) * 255)
 
         if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+
+            cosRes = cos(piOffset)
+            sinRes = sin(piOffset)
 
             print("\n\tBeing Speed:\t{0}".format(finalSpeed.beginKmt))
             print("\tAvg Speed:\t{0}".format(finalSpeed.avgKmt))
@@ -947,74 +949,75 @@ class Session:
             print("\tBlue color: {0}".format(blue))
 
         # Bicycle must increase speed
-        if self.bicycle.speedChange > 0:
-
-            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-                print("\tBike must increase speed by {0}!".format(self.bicycle.speedChange))
-
-            # Red
-            # red = int(translate(self.bicycle.speedChange, 0, maxUpSpeedChange, 0, 255))
-            red = 255
-
-            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-                print("\tRed: {0}".format(red))
-
-            self.bicycle.deviceColor[0] = red
-
-            # Green
-            self.bicycle.deviceColor[1] = 255 - red
-
-            # Blue
-            self.bicycle.deviceColor[2] = 0
-
-        # Bicycle must decrease speed
-        elif self.bicycle.speedChange < 0:
-
-            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-                print("\tBike must decrease speed by {0}!".format(self.bicycle.speedChange))
-
-            if abs(self.bicycle.speedChange) > maxUpSpeedChange:
+        if CONFIG['session']['colorAlgoritm'] == "threeColors":
+            if self.bicycle.speedChange > 0:
 
                 if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-                    print("\tBike must decrease speed by more than max! (Blue)")
+                    print("\tBike must increase speed by {0}!".format(self.bicycle.speedChange))
 
                 # Red
-                self.bicycle.deviceColor[0] = 0
+                # red = int(translate(self.bicycle.speedChange, 0, maxUpSpeedChange, 0, 255))
+                red = 255
+
+                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                    print("\tRed: {0}".format(red))
+
+                self.bicycle.deviceColor[0] = red
 
                 # Green
-                self.bicycle.deviceColor[1] = 0
+                self.bicycle.deviceColor[1] = 255 - red
 
                 # Blue
-                self.bicycle.deviceColor[2] = 255
+                self.bicycle.deviceColor[2] = 0
 
+            # Bicycle must decrease speed
+            elif self.bicycle.speedChange < 0:
+
+                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                    print("\tBike must decrease speed by {0}!".format(self.bicycle.speedChange))
+
+                if abs(self.bicycle.speedChange) > maxUpSpeedChange:
+
+                    if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                        print("\tBike must decrease speed by more than max! (Blue)")
+
+                    # Red
+                    self.bicycle.deviceColor[0] = 0
+
+                    # Green
+                    self.bicycle.deviceColor[1] = 0
+
+                    # Blue
+                    self.bicycle.deviceColor[2] = 255
+
+                else:
+
+                    # Blue
+                    # blue = int(translate(abs(self.bicycle.speedChange), 0, maxUpSpeedChange, 0, 255))
+                    blue = 255
+
+                    if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                        print("\tBlue: {0}".format(blue))
+
+                    self.bicycle.deviceColor[2] = blue
+
+                    # Green
+                    self.bicycle.deviceColor[1] = 255 - blue
+
+                    # Red
+                    self.bicycle.deviceColor[0] = 0
+
+            # No speed change
             else:
 
-                # Blue
-                # blue = int(translate(abs(self.bicycle.speedChange), 0, maxUpSpeedChange, 0, 255))
-                blue = 255
-
-                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-                    print("\tBlue: {0}".format(blue))
-
-                self.bicycle.deviceColor[2] = blue
-
-                # Green
-                self.bicycle.deviceColor[1] = 255 - blue
-
                 # Red
                 self.bicycle.deviceColor[0] = 0
 
-        # No speed change
-        else:
+                # Green
+                self.bicycle.deviceColor[1] = 255
 
-            # Red
-            self.bicycle.deviceColor[0] = 0
-
-            # Green
-            self.bicycle.deviceColor[1] = 255
-
-            # Blue
-            self.bicycle.deviceColor[2] = 0
+                # Blue
+                self.bicycle.deviceColor[2] = 0
 
 
         self.bicycle.targetSpeed = bikeSpeed + self.bicycle.speedChange
