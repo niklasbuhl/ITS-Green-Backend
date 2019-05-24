@@ -5,9 +5,10 @@
       "calcSignalStateAndTTG" : false
     },
     "session" : {
-      "calcBicycleTargetSpeedAndColor" : false,
+      "calcBicycleTargetSpeedAndColor" : true,
       "calcNextSignalStateAndTTG" : false,
-      "calcNextSignal" : false
+      "calcNextSignal" : false,
+      "SessionSpeed" : true
     },
 
     "loadingJSON" : false,
@@ -27,6 +28,11 @@
     "simulation" : false
   },
 
+  "session" : {
+    "minSpeed" : 5,
+    "targetMaxSpeed" : 27
+  },
+
   "data" : {
     "intxns" : {
       "jsonpath" : "./json/noerrebrogade-frederikssundvej-intersections-real-timing.json"
@@ -34,6 +40,6 @@
   },
 
   "web" : {
-    "run" : true
+    "run" : false
   }
 }

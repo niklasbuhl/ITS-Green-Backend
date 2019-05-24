@@ -517,6 +517,8 @@ class Simulation():
         # Used for testing purposes
 
         signalArray = [
+         ['i01', 's02'],
+         ['i01', 's04'],
          ['i02', 's02'],
          ['i02', 's04'],
          ['i03', 's02'],
@@ -536,9 +538,16 @@ class Simulation():
          ['i10', 's02'],
          ['i10', 's04'],
          ['i11', 's02'],
-         ['i11', 's04']
+         ['i11', 's04'],
+         ['i12', 's02'],
+         # ['i12', 's04'], Missing???
+         ['i13', 's02'],
+         ['i13', 's04'],
+         ['i14', 's01'],
+         ['i14', 's03'],
+         ['i15', 's02'],
+         ['i15', 's04'],
         ]
-
         ## Add the rest!
 
         signalStateData = []

@@ -18,7 +18,7 @@
       "programOffsets" : {
         "P1" : 20,
         "P2" : 20,
-        "P3" : 0,
+        "P3" : 10,
         "P4" : 0
       },
 
@@ -921,6 +921,92 @@
         }
       }
     },
+    "i12" : {
+      "kkName" : "Frederikssundvej-Uglevej",
+      "kkId" : "19.10",
+      "loc" : {
+        "lat" : 55.704574,
+        "lon" : 12.526493
+      },
+
+      "programRevolution" : {
+        "P1" : 80,
+        "P2" : 80,
+        "P3" : 60,
+        "P4" : 48
+      },
+
+      "programOffsets" : {
+        "P1" : 11,
+        "P2" : 33,
+        "P3" : 58,
+        "P4" : 14
+      },
+
+      "programs" : [
+        { "program" : "P3", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 1, "m" : 0 } },
+        { "program" : "P4", "from" : { "h" : 1, "m" : 0 }, "to" : { "h" : 5, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 5, "m" : 0 }, "to" : { "h" : 6, "m" : 20 } },
+        { "program" : "P1", "from" : { "h" : 6, "m" : 20 }, "to" : { "h" : 12, "m" : 0 } },
+        { "program" : "P2", "from" : { "h" : 12, "m" : 0 }, "to" : { "h" : 18, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 18, "m" : 0 }, "to" : { "h" : 24, "m" : 0 } }
+      ],
+
+      "signals" : {
+
+        "s01" : {
+          "real" : false,
+          "kkId" : "B2",
+          "type" : "regular",
+          "course" : 34,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s02" : {
+          "real" : true,
+          "kkId" : "A1",
+          "type" : "regular",
+          "course" : 125,
+          "programs" : {
+            "P1" : { "offset" : 56, "RED" : 37, "ORANGE" : 2, "GREEN" : 37, "YELLOW" : 4 },
+            "P2" : { "offset" : 56, "RED" : 37, "ORANGE" : 2, "GREEN" : 37, "YELLOW" : 4 },
+            "P3" : { "offset" : 36, "RED" : 37, "ORANGE" : 2, "GREEN" : 17, "YELLOW" : 4 },
+            "P4" : { "offset" : 24, "RED" : 22, "ORANGE" : 2, "GREEN" : 20, "YELLOW" : 4 }
+          }
+        },
+
+        "s03" : {
+          "real" : false,
+          "kkId" : "B1",
+          "type" : "regular",
+          "course" : 219,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s04" : {
+          "real" : true,
+          "kkId" : "A2",
+          "type" : "regular",
+          "course" : 305,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        }
+      }
+    },
     "i13" : {
       "kkName" : "Noerrebrogade-Stefansgade",
       "kkId" : "19.11",
@@ -939,7 +1025,7 @@
       "programOffsets" : {
         "P1" : 22,
         "P2" : 40,
-        "P3" : 44,
+        "P3" : 67,
         "P4" : 0
       },
 
