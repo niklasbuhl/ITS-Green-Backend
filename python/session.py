@@ -81,10 +81,10 @@ class SessionSpeed:
     def __init__(self, beginMs, endMs, beginKmt, endKmt, beginS, endS):
 
         # [None, reachThisLightSpeed, None, reachThisLightSpeedKmT, 0, timeOfGreenLight]
-
-        print("\t\tCreating new Session Speed: {}, {}, {}, {}, {}, {}".format(
-            beginMs, endMs, beginKmt, endKmt, beginS, endS
-        ))
+        if CONFIG['debug']['session']['SessionSpeed']:
+            print("\t\tCreating new Session Speed: {}, {}, {}, {}, {}, {}".format(
+                beginMs, endMs, beginKmt, endKmt, beginS, endS
+            ))
 
         # Begin/End
         self.beginMs = beginMs
@@ -203,7 +203,7 @@ class SessionSpeed:
         else:
             self.speedChange = 0
 
-        print("\n\n")
+        if CONFIG['debug']['session']['SessionSpeed']:print("\n\n")
 
         self.targetSpeed = self.bikeSpeed + self.speedChange
 
@@ -920,12 +920,12 @@ class Session:
             green = 255
 
         if differenceFromAvg > 0:
-            print("\tMaybe speed up?")
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe speed up?")
             red = int(sin(piOffset) * 255)
             green = int(cos(piOffset) * 255)
 
         else:
-            print("\tMaybe slow down?")
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe slow down?")
             green = int(sin(piOffset) * 255)
             blue = int(cos(piOffset) * 255)
 

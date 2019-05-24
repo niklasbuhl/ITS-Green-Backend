@@ -5,10 +5,10 @@
       "calcSignalStateAndTTG" : false
     },
     "session" : {
-      "calcBicycleTargetSpeedAndColor" : true,
+      "calcBicycleTargetSpeedAndColor" : false,
       "calcNextSignalStateAndTTG" : false,
       "calcNextSignal" : false,
-      "SessionSpeed" : true
+      "SessionSpeed" : false
     },
 
     "loadingJSON" : false,
@@ -40,6 +40,6 @@
   },
 
   "web" : {
-    "run" : false
+    "run" : true
   }
 }
