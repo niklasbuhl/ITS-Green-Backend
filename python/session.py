@@ -918,21 +918,30 @@ class Session:
 
             piOffset = math.pi / 2 * percentOffset
 
+            if finalSpeed.speedChange == 0:
 
+                if differenceFromAvg == 0:
+                    green = 255
 
-            if differenceFromAvg == 0:
-                green = 255
+                if differenceFromAvg > 0:
+                    if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe speed up?")
+                    red = int(sin(piOffset) * 255 / 2)
+                    green = int(cos(piOffset) * 255 / 2 + 123)
 
-            if differenceFromAvg > 0:
-                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe speed up?")
-                red = int(sin(piOffset) * 255 / 2)
-                green = int(cos(piOffset) * 255 / 2 + 123)
+                else:
+                    if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe slow down?")
+                    green = int((sin(piOffset) * 255 / 2) + 123)
+                    blue = int(cos(piOffset) * 255 / 2)
 
-            else:
-                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe slow down?")
-                green = int((sin(piOffset) * 255 / 2) + 123)
-                blue = int(cos(piOffset) * 255 / 2)
+            if finalSpeed.speedChange > 0:
 
+                red = 255
+
+            elif finalSpeed.speedChange < 0:
+
+                blue = 255
+
+        # Print
         if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
 
             cosRes = cos(piOffset)
@@ -949,6 +958,10 @@ class Session:
             print("\tRed color: {0}".format(red))
             print("\tGreen color: {0}".format(green))
             print("\tBlue color: {0}".format(blue))
+
+        # ----------------------------------------------------------------------
+        # Old Color Algorithm
+        # ----------------------------------------------------------------------
 
         # Bicycle must increase speed
         if CONFIG['session']['colorAlgoritm'] == "threeColors":
