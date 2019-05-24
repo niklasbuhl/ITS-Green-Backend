@@ -870,31 +870,35 @@ class Session:
             if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
                 print("\t{0}".format(possibleSpeed.info()))
 
-            if possibleSpeed.speedChange > 0:
+            # if possibleSpeed.speedChange > 0:
 
-                # if possibleSpeed.speedChange < maxUpSpeedChange:
-                if possibleSpeed.targetSpeed <= targetMaxSpeed:
-                    if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-                        print("\tThis is the speed!")
+            # if possibleSpeed.speedChange < maxUpSpeedChange:
+            if possibleSpeed.targetSpeed <= targetMaxSpeed:
+                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                    print("\tThis is the speed!")
 
-                    finalSpeed = possibleSpeed
-                    # self.bicycle.speedChange = possibleSpeed.speedChange
-                    # self.bicycle.targetSpeed = possibleSpeed.targetSpeed
-                    break
+                finalSpeed = possibleSpeed
+                # self.bicycle.speedChange = possibleSpeed.speedChange
+                # self.bicycle.targetSpeed = possibleSpeed.targetSpeed
+                break
+            #
+            # else:
+            #
+            #     continue
 
-                else:
+            # if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            #     print("\tThis is the speed!")
+            #
+            #
+            # finalSpeed = possibleSpeed
+            # # self.bicycle.speedChange = possibleSpeed.speedChange
+            # # self.bicycle.targetSpeed = possibleSpeed.targetSpeed
+            #
+            # break
 
-                    continue
-
-            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-                print("\tThis is the speed!")
-
-
-            finalSpeed = possibleSpeed
-            # self.bicycle.speedChange = possibleSpeed.speedChange
-            # self.bicycle.targetSpeed = possibleSpeed.targetSpeed
-
-            break
+        if finalSpeed is None:
+            print("SOMETHING WRONG!")
+            return
 
         # ----------------------------------------------------------------------
         # Calculate color
@@ -910,9 +914,13 @@ class Session:
         if CONFIG['session']['colorAlgoritm'] == "sinCosColor":
 
             differenceFromAvg = finalSpeed.avgKmt - finalSpeed.targetSpeed
+
             avgOffset = (finalSpeed.beginKmt - finalSpeed.endKmt) / 2
 
-            percentOffset = abs(differenceFromAvg / avgOffset)
+            percentOffset = 0
+
+            if avgOffset is not 0:
+                percentOffset = abs(differenceFromAvg / avgOffset)
 
             if percentOffset > 1: percentOffset = 1
 
