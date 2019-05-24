@@ -901,7 +901,7 @@ class Session:
         # ----------------------------------------------------------------------
 
         if CONFIG['session']['colorAlgoritm'] == "sinCosColor":
-            
+
             self.bicycle.speedChange = finalSpeed.speedChange
             self.bicycle.targetSpeed = finalSpeed.targetSpeed
 
@@ -930,6 +930,18 @@ class Session:
                 if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe slow down?")
                 green = int(sin(piOffset) * 255)
                 blue = int(cos(piOffset) * 255)
+
+
+            # Red
+            self.bicycle.deviceColor[0] = red
+
+            # Green
+            self.bicycle.deviceColor[1] = green
+
+            # Blue
+            self.bicycle.deviceColor[2] = blue
+
+
 
         if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
 
