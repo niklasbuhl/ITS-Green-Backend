@@ -9,26 +9,26 @@
       },
 
       "programRevolution" : {
-        "P1" : 0,
-        "P2" : 0,
-        "P3" : 0,
-        "P4" : 0
+        "P1" : 80,
+        "P2" : 80,
+        "P3" : 70,
+        "P4" : 60
       },
 
       "programOffsets" : {
-        "P1" : 0,
-        "P2" : 0,
-        "P3" : 0,
-        "P4" : 0
+        "P1" : 79,
+        "P2" : 57,
+        "P3" : 48,
+        "P4" : 2
       },
 
       "programs" : [
-        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } },
-        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } },
-        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } },
-        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } },
-        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } },
-        { "program" : "PP", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 0, "m" : 0 } }
+        { "program" : "P3", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 1, "m" : 0 } },
+        { "program" : "P4", "from" : { "h" : 1, "m" : 0 }, "to" : { "h" : 5, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 5, "m" : 0 }, "to" : { "h" : 6, "m" : 20 } },
+        { "program" : "P1", "from" : { "h" : 6, "m" : 20 }, "to" : { "h" : 12, "m" : 0 } },
+        { "program" : "P2", "from" : { "h" : 12, "m" : 0 }, "to" : { "h" : 18, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 18, "m" : 0 }, "to" : { "h" : 24, "m" : 0 } }
       ],
 
       "signals" : {
@@ -39,10 +39,10 @@
           "type" : "regular",
           "course" : 138,
           "programs" : {
-            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
-            "P2" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
-            "P3" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
-            "P4" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 }
+            "P1" : { "offset" : 55, "RED" : 33, "ORANGE" : 2, "GREEN" : 41, "YELLOW" : 4 },
+            "P2" : { "offset" : 55, "RED" : 33, "ORANGE" : 2, "GREEN" : 41, "YELLOW" : 4 },
+            "P3" : { "offset" : 41, "RED" : 37, "ORANGE" : 2, "GREEN" : 27, "YELLOW" : 4 },
+            "P4" : { "offset" : 35, "RED" : 33, "ORANGE" : 2, "GREEN" : 21, "YELLOW" : 4 }
           }
         },
 
@@ -53,9 +53,9 @@
           "course" : 229,
           "programs" : {
             "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
-            "P2" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
-            "P3" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
-            "P4" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 }
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
           }
         },
 
@@ -65,10 +65,10 @@
           "type" : "regular",
           "course" : 318,
           "programs" : {
-            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
-            "P2" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
-            "P3" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 },
-            "P4" : { "offset" : 0, "RED" : 0, "YELLOW" : 0, "GREEN" : 0, "ORANGE" : 0 }
+            "P1" : { "offset" : 53, "RED" : 35, "ORANGE" : 2, "GREEN" : 39, "YELLOW" : 4 },
+            "P2" : { "offset" : 53, "RED" : 35, "ORANGE" : 2, "GREEN" : 39, "YELLOW" : 4 },
+            "P3" : { "offset" : 39, "RED" : 39, "ORANGE" : 2, "GREEN" : 25, "YELLOW" : 4 },
+            "P4" : { "offset" : 33, "RED" : 35, "ORANGE" : 2, "GREEN" : 19, "YELLOW" : 4 }
           }
         }
       }

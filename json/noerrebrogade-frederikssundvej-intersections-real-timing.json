@@ -1,5 +1,92 @@
 {
   "intxns": {
+    "i01" : {
+      "kkName" : "Tomsgaardsvej-Frederikssundvej",
+      "kkId" : "17.08",
+      "loc" : {
+        "lat" : 55.70602,
+        "lon" : 12.52162
+      },
+
+      "programRevolution" : {
+        "P1" : 80,
+        "P2" : 80,
+        "P3" : 70,
+        "P4" : 60
+      },
+
+      "programOffsets" : {
+        "P1" : 20,
+        "P2" : 20,
+        "P3" : 0,
+        "P4" : 0
+      },
+
+      "programs" : [
+        { "program" : "P3", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 1, "m" : 0 } },
+        { "program" : "P4", "from" : { "h" : 1, "m" : 0 }, "to" : { "h" : 5, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 5, "m" : 0 }, "to" : { "h" : 6, "m" : 30 } },
+        { "program" : "P1", "from" : { "h" : 6, "m" : 30 }, "to" : { "h" : 9, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 9, "m" : 0 }, "to" : { "h" : 15, "m" : 0 } },
+        { "program" : "P2", "from" : { "h" : 15, "m" : 0 }, "to" : { "h" : 18, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 18, "m" : 0 }, "to" : { "h" : 24, "m" : 0 } }
+      ],
+
+      "signals" : {
+
+        "s01" : {
+          "real" : false,
+          "kkId" : "A1",
+          "type" : "regular",
+          "course" : 10,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s02" : {
+          "real" : true,
+          "kkId" : "B2",
+          "type" : "regular",
+          "course" : 110,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 57, "RED" : 43, "ORANGE" : 2, "GREEN" : 13, "YELLOW" : 12 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s03" : {
+          "real" : false,
+          "kkId" : "A2",
+          "type" : "regular",
+          "course" : 191,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s04" : {
+          "real" : true,
+          "kkId" : "B1",
+          "type" : "regular",
+          "course" : 282,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 65, "RED" : 43, "ORANGE" : 2, "GREEN" : 13, "YELLOW" : 12 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        }
+      }
+    },
     "i02" : {
       "kkName" : "Noerrebrogade-Dosseringen",
       "kkId" : "18.01",
@@ -830,6 +917,251 @@
             "P2" : { "offset" : 54, "RED" : 39, "ORANGE" : 2, "GREEN" : 35, "YELLOW" : 4 },
             "P3" : { "offset" : 34, "RED" : 39, "ORANGE" : 2, "GREEN" : 15, "YELLOW" : 4 },
             "P4" : { "offset" : 22, "RED" : 24, "ORANGE" : 2, "GREEN" : 18, "YELLOW" : 4 }
+          }
+        }
+      }
+    },
+    "i13" : {
+      "kkName" : "Noerrebrogade-Stefansgade",
+      "kkId" : "19.11",
+      "loc" : {
+        "lat" : 55.696782,
+        "lon" : 12.545150
+      },
+
+      "programRevolution" : {
+        "P1" : 80,
+        "P2" : 80,
+        "P3" : 70,
+        "P4" : 60
+      },
+
+      "programOffsets" : {
+        "P1" : 22,
+        "P2" : 40,
+        "P3" : 44,
+        "P4" : 0
+      },
+
+      "programs" : [
+        { "program" : "P3", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 1, "m" : 0 } },
+        { "program" : "P4", "from" : { "h" : 1, "m" : 0 }, "to" : { "h" : 5, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 5, "m" : 0 }, "to" : { "h" : 6, "m" : 20 } },
+        { "program" : "P1", "from" : { "h" : 6, "m" : 20 }, "to" : { "h" : 9, "m" : 30 } },
+        { "program" : "P3", "from" : { "h" : 9, "m" : 30 }, "to" : { "h" : 14, "m" : 30 } },
+        { "program" : "P2", "from" : { "h" : 14, "m" : 30 }, "to" : { "h" : 18, "m" : 0 } },
+        { "program" : "P1", "from" : { "h" : 18, "m" : 0 }, "to" : { "h" : 24, "m" : 0 } }
+      ],
+
+      "signals" : {
+
+        "s01" : {
+          "real" : false,
+          "kkId" : "B2",
+          "type" : "regular",
+          "course" : 48,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s02" : {
+          "real" : true,
+          "kkId" : "A2",
+          "type" : "regular",
+          "course" : 138,
+          "programs" : {
+            "P1" : { "offset" : 54, "RED" : 32, "ORANGE" : 2, "GREEN" : 42, "YELLOW" : 4 },
+            "P2" : { "offset" : 54, "RED" : 32, "ORANGE" : 2, "GREEN" : 42, "YELLOW" : 4 },
+            "P3" : { "offset" : 43, "RED" : 33, "ORANGE" : 2, "GREEN" : 31, "YELLOW" : 4 },
+            "P4" : { "offset" : 37, "RED" : 29, "ORANGE" : 2, "GREEN" : 25, "YELLOW" : 4 }
+          }
+        },
+
+        "s03" : {
+          "real" : false,
+          "kkId" : "B1",
+          "type" : "regular",
+          "course" : 207,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s04" : {
+          "real" : true,
+          "kkId" : "A1",
+          "type" : "regular",
+          "course" : 317,
+          "programs" : {
+            "P1" : { "offset" : 54, "RED" : 32, "ORANGE" : 2, "GREEN" : 42, "YELLOW" : 4 },
+            "P2" : { "offset" : 54, "RED" : 32, "ORANGE" : 2, "GREEN" : 42, "YELLOW" : 4 },
+            "P3" : { "offset" : 43, "RED" : 33, "ORANGE" : 2, "GREEN" : 31, "YELLOW" : 4 },
+            "P4" : { "offset" : 37, "RED" : 29, "ORANGE" : 2, "GREEN" : 25, "YELLOW" : 4 }
+          }
+        }
+      }
+    },
+    "i14" : {
+      "kkName" : "Noerrebrogade-Hilleroedgade",
+      "kkId" : "19.12",
+      "loc" : {
+        "lat" : 55.697670,
+        "lon" : 12.543793
+      },
+
+      "programRevolution" : {
+        "P1" : 80,
+        "P2" : 80,
+        "P3" : 70,
+        "P4" : 60
+      },
+
+      "programOffsets" : {
+        "P1" : 79,
+        "P2" : 57,
+        "P3" : 48,
+        "P4" : 2
+      },
+
+      "programs" : [
+        { "program" : "P3", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 1, "m" : 0 } },
+        { "program" : "P4", "from" : { "h" : 1, "m" : 0 }, "to" : { "h" : 5, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 5, "m" : 0 }, "to" : { "h" : 6, "m" : 20 } },
+        { "program" : "P1", "from" : { "h" : 6, "m" : 20 }, "to" : { "h" : 12, "m" : 0 } },
+        { "program" : "P2", "from" : { "h" : 12, "m" : 0 }, "to" : { "h" : 18, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 18, "m" : 0 }, "to" : { "h" : 24, "m" : 0 } }
+      ],
+
+      "signals" : {
+
+        "s01" : {
+          "real" : true,
+          "kkId" : "A2",
+          "type" : "regular",
+          "course" : 138,
+          "programs" : {
+            "P1" : { "offset" : 55, "RED" : 33, "ORANGE" : 2, "GREEN" : 41, "YELLOW" : 4 },
+            "P2" : { "offset" : 55, "RED" : 33, "ORANGE" : 2, "GREEN" : 41, "YELLOW" : 4 },
+            "P3" : { "offset" : 41, "RED" : 37, "ORANGE" : 2, "GREEN" : 27, "YELLOW" : 4 },
+            "P4" : { "offset" : 35, "RED" : 33, "ORANGE" : 2, "GREEN" : 21, "YELLOW" : 4 }
+          }
+        },
+
+        "s02" : {
+          "real" : false,
+          "kkId" : "CyB1",
+          "type" : "regular",
+          "course" : 229,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s03" : {
+          "real" : true,
+          "kkId" : "A1",
+          "type" : "regular",
+          "course" : 318,
+          "programs" : {
+            "P1" : { "offset" : 53, "RED" : 35, "ORANGE" : 2, "GREEN" : 39, "YELLOW" : 4 },
+            "P2" : { "offset" : 53, "RED" : 35, "ORANGE" : 2, "GREEN" : 39, "YELLOW" : 4 },
+            "P3" : { "offset" : 39, "RED" : 39, "ORANGE" : 2, "GREEN" : 25, "YELLOW" : 4 },
+            "P4" : { "offset" : 33, "RED" : 35, "ORANGE" : 2, "GREEN" : 19, "YELLOW" : 4 }
+          }
+        }
+      }
+    },
+    "i15" : {
+      "kkName" : "Noerrebrogade-Cykelruten",
+      "kkId" : "19.14",
+      "loc" : {
+        "lat" : 55.699045,
+        "lon" : 12.541738
+      },
+
+      "programRevolution" : {
+        "P1" : 80,
+        "P2" : 80,
+        "P3" : 70,
+        "P4" : 60
+      },
+
+      "programOffsets" : {
+        "P1" : 45,
+        "P2" : 19,
+        "P3" : 1,
+        "P4" : 2
+      },
+
+      "programs" : [
+        { "program" : "P4", "from" : { "h" : 0, "m" : 0 }, "to" : { "h" : 5, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 5, "m" : 0 }, "to" : { "h" : 6, "m" : 20 } },
+        { "program" : "P1", "from" : { "h" : 6, "m" : 20 }, "to" : { "h" : 12, "m" : 0 } },
+        { "program" : "P2", "from" : { "h" : 12, "m" : 0 }, "to" : { "h" : 18, "m" : 0 } },
+        { "program" : "P3", "from" : { "h" : 18, "m" : 0 }, "to" : { "h" : 24, "m" : 0 } }
+      ],
+
+      "signals" : {
+
+        "s01" : {
+          "real" : false,
+          "kkId" : "CyB2",
+          "type" : "regular",
+          "course" : 48,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s02" : {
+          "real" : true,
+          "kkId" : "A2",
+          "type" : "regular",
+          "course" : 138,
+          "programs" : {
+            "P1" : { "offset" : 69, "RED" : 23, "ORANGE" : 2, "GREEN" : 37, "YELLOW" : 18 },
+            "P2" : { "offset" : 69, "RED" : 23, "ORANGE" : 2, "GREEN" : 37, "YELLOW" : 18 },
+            "P3" : { "offset" : 59, "RED" : 23, "ORANGE" : 2, "GREEN" : 27, "YELLOW" : 18 },
+            "P4" : { "offset" : 49, "RED" : 23, "ORANGE" : 2, "GREEN" : 17, "YELLOW" : 18 }
+          }
+        },
+
+        "s03" : {
+          "real" : false,
+          "kkId" : "CyB1",
+          "type" : "regular",
+          "course" : 216,
+          "programs" : {
+            "P1" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P2" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P3" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 },
+            "P4" : { "offset" : 0, "RED" : 0, "ORANGE" : 0, "GREEN" : 0, "YELLOW" : 0 }
+          }
+        },
+
+        "s04" : {
+          "real" : true,
+          "kkId" : "A1",
+          "type" : "regular",
+          "course" : 318,
+          "programs" : {
+            "P1" : { "offset" : 69, "RED" : 23, "ORANGE" : 2, "GREEN" : 37, "YELLOW" : 18 },
+            "P2" : { "offset" : 69, "RED" : 23, "ORANGE" : 2, "GREEN" : 37, "YELLOW" : 18 },
+            "P3" : { "offset" : 59, "RED" : 23, "ORANGE" : 2, "GREEN" : 27, "YELLOW" : 18 },
+            "P4" : { "offset" : 49, "RED" : 23, "ORANGE" : 2, "GREEN" : 17, "YELLOW" : 18 }
           }
         }
       }
