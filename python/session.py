@@ -859,7 +859,8 @@ class Session:
                 print("\tBike must increase speed by {0}!".format(self.bicycle.speedChange))
 
             # Red
-            red = int(translate(self.bicycle.speedChange, 0, maxUpSpeedChange, 0, 255))
+            # red = int(translate(self.bicycle.speedChange, 0, maxUpSpeedChange, 0, 255))
+            red = 255
 
             if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
                 print("\tRed: {0}".format(red))
@@ -895,7 +896,8 @@ class Session:
             else:
 
                 # Blue
-                blue = int(translate(abs(self.bicycle.speedChange), 0, maxUpSpeedChange, 0, 255))
+                # blue = int(translate(abs(self.bicycle.speedChange), 0, maxUpSpeedChange, 0, 255))
+                blue = 255
 
                 if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
                     print("\tBlue: {0}".format(blue))
