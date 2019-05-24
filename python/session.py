@@ -900,10 +900,14 @@ class Session:
         # Calculate color
         # ----------------------------------------------------------------------
 
-        if CONFIG['session']['colorAlgoritm'] == "sinCosColor":
+        self.bicycle.speedChange = finalSpeed.speedChange
+        self.bicycle.targetSpeed = finalSpeed.targetSpeed
 
-            self.bicycle.speedChange = finalSpeed.speedChange
-            self.bicycle.targetSpeed = finalSpeed.targetSpeed
+        red = 0
+        green = 0
+        blue = 0
+
+        if CONFIG['session']['colorAlgoritm'] == "sinCosColor":
 
             differenceFromAvg = finalSpeed.avgKmt - finalSpeed.targetSpeed
             avgOffset = (finalSpeed.beginKmt - finalSpeed.endKmt) / 2
@@ -914,34 +918,20 @@ class Session:
 
             piOffset = math.pi / 2 * percentOffset
 
-            red = 0
-            green = 0
-            blue = 0
+
 
             if differenceFromAvg == 0:
                 green = 255
 
             if differenceFromAvg > 0:
                 if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe speed up?")
-                red = int(sin(piOffset) * 255)
-                green = int(cos(piOffset) * 255)
+                red = int(sin(piOffset) * 255 / 2)
+                green = int(cos(piOffset) * 255 / 2 + 123)
 
             else:
                 if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe slow down?")
-                green = int(sin(piOffset) * 255)
-                blue = int(cos(piOffset) * 255)
-
-
-            # Red
-            self.bicycle.deviceColor[0] = red
-
-            # Green
-            self.bicycle.deviceColor[1] = green
-
-            # Blue
-            self.bicycle.deviceColor[2] = blue
-
-
+                green = int((sin(piOffset) * 255 / 2) + 123)
+                blue = int(cos(piOffset) * 255 / 2)
 
         if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
 
@@ -1032,7 +1022,23 @@ class Session:
                 self.bicycle.deviceColor[2] = 0
 
 
+        # Target Speed
         self.bicycle.targetSpeed = bikeSpeed + self.bicycle.speedChange
+
+        # End Speed
+        self.bicycle.endSpeed = finalSpeed.endKmt
+
+        # Begin Speed
+        self.bicycle.beginSpeed = finalSpeed.beginKmt
+
+        # Red
+        self.bicycle.deviceColor[0] = red
+
+        # Green
+        self.bicycle.deviceColor[1] = green
+
+        # Blue
+        self.bicycle.deviceColor[2] = blue
 
         return
 
@@ -1050,6 +1056,8 @@ class Session:
         message = message + "\tSpeed:\t\t\t\t{0} km/t\n".format(self.bicycle.speed)
         message = message + "\tSpeed Change:\t\t\t{0} km/t\n".format(round(self.bicycle.speedChange, 1))
         message = message + "\tTarget Speed:\t\t\t{0} km/t\n".format(round(self.bicycle.targetSpeed, 1))
+        message = message + "\tGreen Begin Speed:\t\t\t{0} km/t\n".format(round(self.bicycle.beginSpeed, 1))
+        message = message + "\tGreen End Speed:\t\t\t{0} km/t\n".format(round(self.bicycle.endSpeed, 1))
         message = message + "\tDistance to next signal:\t{0} m\n".format(round(self.bicycle.distanceToNXS, 1))
 
         return {
@@ -1057,6 +1065,8 @@ class Session:
             "deviceColor" : self.bicycle.deviceColor,
             "course" : self.bicycle.course,
             "speed" : self.bicycle.speed,
+            "beginSpeed" : self.bicycle.beginSpeed,
+            "endSpeed" : self.bicycle.endSpeed,
             "speedChange" : self.bicycle.speedChange,
             "distanceToNXS" : self.bicycle.distanceToNXS
         }
@@ -1135,6 +1145,8 @@ class Bicycle:
         self.targetSpeed = speed
         self.distanceToNXS = 0
         self.speedChange = 0
+        self.endSpeed = 0
+        self.beginSpeed = 0
 
     def setUpdated(self, updated): self.updated = updated
     def getUpdated(self): return self.updated
