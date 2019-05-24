@@ -926,12 +926,14 @@ class Session:
                 if differenceFromAvg > 0:
                     if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe speed up?")
                     red = int(sin(piOffset) * 255 / 2)
-                    green = int(cos(piOffset) * 255 / 2 + 123)
+                    green = 255 - red
+                    # green = int(cos(piOffset) * 255 / 2 + 123)
 
                 else:
                     if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe slow down?")
                     blue = int(sin(piOffset) * 255 / 2)
-                    green = int((cos(piOffset) * 255 / 2) + 123)
+                    green = 255 - blue
+                    # green = int((cos(piOffset) * 255 / 2) + 123)
 
             if finalSpeed.speedChange > 0:
 
