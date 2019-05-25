@@ -78,6 +78,11 @@ def sessionPage():
 def routeIntxnsPage():
     pass
 
+# Color
+@app.route(API['pages']['color'])
+def colorPage():
+    return render_template("color.html")
+
 # ------------------------------------------------------------------------------
 # API: Browser Simulation Visualization
 # ------------------------------------------------------------------------------
@@ -311,9 +316,9 @@ print("\n# ---------------------------------------------------------------")
 print("# Run a few tests...")
 print("# ---------------------------------------------------------------")
 
-# Set Bicycle Position to Nørreport
 sesh.bicycle.setUpdated(0)
-sesh.bicycle.setLocation(Location(55.683634, 12.571796))
+# sesh.bicycle.setLocation(Location(55.683634, 12.571796)) # Nørreport
+sesh.bicycle.setLocation(Location(55.687246, 12.562479)) # Just in front of the first intersection
 sesh.bicycle.setSpeed(20)
 sesh.bicycle.setCourse(300)
 
@@ -333,7 +338,7 @@ print(sesh.getBicycleTargetSpeedAndColor()['message'])
 print(sesh.getNextSignalStateAndTTG()['message'])
 
 # Get All Signal State And TTG
-print(sim.getAllSignalStatesAndTTG())
+# print(sim.getAllSignalStatesAndTTG())
 
 # Peace
 print("Peace out! {0} ms\n\n".format(ms() - now))

@@ -16,9 +16,23 @@ function getBicycleTargetSpeedAndColor() {
     function(data) {
 
       // console.log(data);
+      var red = data.deviceColor[0]
+      if (red > 0) red = 127 + red
+
+      var green = data.deviceColor[1];
+      if (green > 0) green = 127 + data.deviceColor[1]/2;
+
+      var blue = data.deviceColor[2]
+      if (blue > 0) blue = 127 + blue
+
+      console.log("["+red+", "+green+", "+blue+"]");
+
+
 
       // Replace newlines
       data.message = data.message.replace(/\n/g, '<br />');
+
+      document.getElementById('color').style.backgroundColor = "rgb("+red+", "+green+", "+blue+")";
 
       document.getElementById('bicycle').innerHTML = data.message;
 
@@ -59,7 +73,7 @@ function getAllSignalStatesAndTTG() {
     // ,
     function(data) {
 
-      console.log(data);
+      // console.log(data);
 
       // Replace newlines
       data.message = data.message.replace(/\n/g, '<tr><th>');

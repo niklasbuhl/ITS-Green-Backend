@@ -4,8 +4,6 @@ var $ = require('jquery');
 API = require('./../json/api.json');
 
 var getBicycleTargetSpeedAndColorLooper;
-var getNextSignalStateAndTTGLooper;
-var getAllSignalStatesAndTTGLooper;
 
 function getBicycleTargetSpeedAndColor() {
 
@@ -35,7 +33,18 @@ function getBicycleTargetSpeedAndColor() {
 
       document.getElementById('color').style.backgroundColor = "rgb("+red+", "+green+", "+blue+")";
 
-      document.getElementById('bicycle').innerHTML = data.message;
+
+      var speed = data.speed;
+
+      speed = speed.toFixed(1);
+
+      document.getElementById('speed').innerHTML = speed;
+
+      var change = data.speedChange;
+
+      change = change.toFixed(1);
+
+      document.getElementById('speed-change').innerHTML = change;
 
   });
 
@@ -43,58 +52,7 @@ function getBicycleTargetSpeedAndColor() {
 
 }
 
-function getNextSignalStateAndTTG() {
-
-  // console.log(API.session.getNextSignalStateAndTTG.url);
-
-  $.get(
-    API.session.getNextSignalStateAndTTG.url,
-    // ,
-    function(data) {
-
-      // console.log(data);
-
-      // Replace newlines
-      data.message = data.message.replace(/\n/g, '<br />');
-
-      document.getElementById('signal').innerHTML = data.message;
-
-  });
-
-  getNextSignalStateAndTTGLooper = setTimeout(getNextSignalStateAndTTG, 1000);
-
-}
-
-function getAllSignalStatesAndTTG() {
-
-  console.log(API.sim.getAllSignalStatesAndTTG.url);
-
-  $.get(
-    API.sim.getAllSignalStatesAndTTG.url,
-    // ,
-    function(data) {
-
-      // console.log(data);
-
-      // Replace newlines
-      data.message = data.message.replace(/\n/g, '<tr><th>');
-
-      // Replace tabs
-      data.message = data.message.replace(/\t/g, '</th><th>');
-
-      table = "<table>" + data.message + "</table>"
-
-      document.getElementById('all').innerHTML = table;
-
-  });
-
-  getAllSignalStatesAndTTGLooper = setTimeout(getAllSignalStatesAndTTG, 1000);
-
-}
-
 getBicycleTargetSpeedAndColor();
-getNextSignalStateAndTTG();
-getAllSignalStatesAndTTG();
 
 },{"./../json/api.json":2,"jquery":3}],2:[function(require,module,exports){
 module.exports={

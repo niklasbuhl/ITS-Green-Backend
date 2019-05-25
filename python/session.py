@@ -80,11 +80,11 @@ class SessionSpeed:
 
     def __init__(self, beginMs, endMs, beginKmt, endKmt, beginS, endS):
 
-        # [None, reachThisLightSpeed, None, reachThisLightSpeedKmT, 0, timeOfGreenLight]
-        if CONFIG['debug']['session']['SessionSpeed']:
-            print("\t\tCreating new Session Speed: {}, {}, {}, {}, {}, {}".format(
-                beginMs, endMs, beginKmt, endKmt, beginS, endS
-            ))
+        # # [None, reachThisLightSpeed, None, reachThisLightSpeedKmT, 0, timeOfGreenLight]
+        # if CONFIG['debug']['session']['SessionSpeed']:
+        #     print("\t\tCreating new Session Speed: {0}, {1}, {2}, {3}, {4}, {5}".format(
+        #         beginMs, endMs, beginKmt, endKmt, beginS, endS
+        #     ))
 
         # Begin/End
         self.beginMs = beginMs
@@ -102,6 +102,24 @@ class SessionSpeed:
         except:
             self.avgMs = endMs
             self.avgKmt = endKmt
+
+        if self.beginMs is None:
+            if CONFIG['debug']['session']['SessionSpeed']: print("\tBeginMs is None.")
+            self.beginMs = endMs
+
+        if self.beginKmt is None:
+            if CONFIG['debug']['session']['SessionSpeed']: print("\beginKmt is None.")
+            self.beginKmt = endKmt
+
+        if CONFIG['debug']['session']['SessionSpeed']:
+            print("\tCreating new Session Speed: {0}, {1}, {2}, {3}, {4}, {5}\n".format(
+                round(self.beginMs, 1),
+                round(self.endMs, 1),
+                round(self.beginKmt, 1),
+                round(self.endKmt, 1),
+                round(self.beginS, 1),
+                round(self.endS, 1)
+            ))
 
         # Changes in speed
 
@@ -121,6 +139,10 @@ class SessionSpeed:
 
         self.targetSpeed = None
         self.timespanAvgTargetSpeed = None
+
+        # Next GTS
+        self.gtsBegin = None
+        self.gtsEnd = None
 
     def setSpeedChanges(self, beginSpeedChange, endSpeedChange):
 
@@ -164,7 +186,7 @@ class SessionSpeed:
 
 
         # SessionSpeed: [BikeSpeed] [ToBegin] []-[] [ToEnd]
-        info = "SessionSpeed:\t[{0}]\t{1}\t[{2}]-[{3}]\t{4}\t[{5}]\t({6})\tT[{7}]".format(
+        info = "SessionSpeed:\t[{0}]\t{1}\t[{2}]-[{3}]\t{4}\t[{5}]\t({6})\tT[{7}]\tGTS[{8}, {9}]".format(
             bikeSpeed,
             beginSpeedChangeMsKmt,
             beginKmt,
@@ -172,7 +194,9 @@ class SessionSpeed:
             endSpeedChangeMsKmt,
             speedChange,
             relativeSpeedChange,
-            targetSpeed
+            targetSpeed,
+            self.gtsBegin,
+            self.gtsEnd
         )
 
         # print(info)
@@ -183,7 +207,7 @@ class SessionSpeed:
 
         if CONFIG['debug']['session']['SessionSpeed']:
             print("\tCalculate Speed Change and Target.")
-            print("\tBeginKmt: {0}, BeginSpeedChangeKmt: {1}, EndSpeedChangeKmt: {2}".format(self.beginKmt, self.beginSpeedChangeKmt, self.endSpeedChangeKmt))
+            print("\tBeginKmt: {0}\n\tBeginSpeedChangeKmt: {1}\n\tEndSpeedChangeKmt: {2}".format(self.beginKmt, self.beginSpeedChangeKmt, self.endSpeedChangeKmt))
 
         if self.beginKmt is None:
             if CONFIG['debug']['session']['SessionSpeed']: print("\tFirst Speed")
@@ -577,19 +601,37 @@ class Session:
 
     def calcBicycleTargetSpeedAndColor(self, sim):
 
+        # Get current speed
+        bikeSpeed = self.bicycle.speed
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tCurrent bicycle speed: {0}m/s\n".format(bikeSpeed))
+
+        # ----------------------------------------------------------------------
+        # Walking Speed
+        # ----------------------------------------------------------------------
+
+        if bikeSpeed < CONFIG['session']['minSpeed']:
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\n\tYou're moving with walking or less speed!")
+
+            self.bicycle.speedChange = 0
+            self.bicycle.targetSpeed = bikeSpeed
+            self.bicycle.deviceColor[0] = 255
+            self.bicycle.deviceColor[1] = 0
+            self.bicycle.deviceColor[2] = 255
+
+            return
+
+        # ----------------------------------------------------------------------
+
         if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
             print("\n# -------------------------------------------")
             print("# Calculating Bicycle Target Speed And Color")
             print("# -------------------------------------------\n")
 
-        # Current speed
-
         # Get bicycle location
         bikeLat = self.bicycle.loc.lat
         bikeLon = self.bicycle.loc.lon
-
-        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-            print("\tBicycle \t\tLocation: {0}, {1}".format(bikeLat, bikeLon))
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tBicycle \t\tLocation: {0}, {1}".format(bikeLat, bikeLon))
 
         # Get next signal from sim
         intId = self.nextSignal.int
@@ -597,55 +639,45 @@ class Session:
 
         sigLoc = sim.getIntersection(intId).loc
 
-        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-            print("\tNext Signal: [{0}][{1}] Location: {2}, {3}".format(intId, sigId, sigLoc.lat, sigLoc.lon))
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tNext Signal: [{0}][{1}] Location: {2}, {3}".format(intId, sigId, sigLoc.lat, sigLoc.lon))
 
         # Get distance
-        distance = getDistanceFromLatLonInM(
-            bikeLat, bikeLon, sigLoc.lat, sigLoc.lon
-        )
-
+        distance = getDistanceFromLatLonInM(bikeLat, bikeLon, sigLoc.lat, sigLoc.lon)
         self.bicycle.distanceToNXS = distance
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tDistance between bicycle and signal: {0}m".format(round(distance,1)))
 
-        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-            print("\tDistance between bicycle and signal: {0}m".format(round(distance,1)))
 
-        # Get current speed
-        bikeSpeed = self.bicycle.speed
-
-        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-            print("\tCurrent bicycle speed: {0}m/s\n".format(bikeSpeed))
-
-        # Get next signal time to green "slots"
+        # Get next signal state, time to green "slots"
         signalStateAndTTG = sim.calcSignalStateAndTTG(intId, sigId, False)
 
-        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-            print("\tSignal State:\n")
+        revolution = signalStateAndTTG.revolution
+        gts = signalStateAndTTG.gts
+        ttg = signalStateAndTTG.ttg
+        state = signalStateAndTTG.state
 
-        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-            print("\t{0}\t{1}\t{2}\t{3}".format(
-                signalStateAndTTG.state,
-                signalStateAndTTG.ttg,
-                signalStateAndTTG.gts,
-                signalStateAndTTG.revolution
-            ))
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tSignal State:\n")
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\t{0}\tTTG: {1}\tGTS: {2}\t REV: {3}".format(state, ttg, gts, revolution))
 
+        # Setup Currently Green
         currentlyGreen = False
+        greenSpeed = False
         timeOfGreenLight = 0
 
-
+        # Possible Speeds Calculation
         speeds = []
 
-        if signalStateAndTTG.ttg < 0:
+        # If it is currently green
+        if ttg <= 0:
             currentlyGreen = True
-            timeOfGreenLight = signalStateAndTTG.gts + signalStateAndTTG.ttg
+            timeOfGreenLight = gts + ttg
 
-            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-                print("\tIt is currently green light for another {0} seconds.".format(timeOfGreenLight))
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tIt is currently green light for another {0} seconds.".format(timeOfGreenLight))
 
-        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-            print("\n\tCalculating Speeds:")
-            print("\n\t[BEGIN m/s]\t[END m/s]\t[BEGIN km/t]\t[END km/t]\t[FROM s]\t[TO s]")
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\n\tCalculating Speeds:\n\t[BEGIN m/s]\t[END m/s]\t[BEGIN km/t]\t[END km/t]\t[FROM s]\t[TO s]")
+
+        # Calculate Next TTG Begin and End
+        ttgNextBegin = ttg
+        ttgNextEnd = ttgNextBegin + gts
 
         if currentlyGreen and timeOfGreenLight != 0:
 
@@ -663,14 +695,10 @@ class Session:
             possibleSpeed = SessionSpeed(None, reachThisLightSpeed, None, reachThisLightSpeedKmT, 0, timeOfGreenLight)
 
             possibleSpeed.bikeSpeed = bikeSpeed
+            possibleSpeed.gtsBegin = ttgNextBegin
+            possibleSpeed.gtsEnd = ttgNextEnd
 
             speeds.append(possibleSpeed)
-
-        gts = signalStateAndTTG.gts
-
-        revolution = signalStateAndTTG.revolution
-        ttgNextBegin = signalStateAndTTG.ttg
-        ttgNextEnd = ttgNextBegin + gts
 
         if currentlyGreen:
             ttgNextBegin = ttgNextBegin + revolution
@@ -680,66 +708,63 @@ class Session:
             ttgNextBegin = ttgNextBegin + revolution
             ttgNextEnd = ttgNextEnd + revolution
 
+        # Calculate Begin GTS and End GTS Speeds
         beginSpeedMS = distance / ttgNextBegin
         endSpeedMS = distance / ttgNextEnd
 
+        # Calculate to Km/t
         beginSpeedKmt = msToKmt(beginSpeedMS)
         endSpeedKmt = msToKmt(endSpeedMS)
 
-        maxMS = 100/60/60*1000 # 1000 km/t
-        minMS = 1
+        # Boundaries for the calculations
+        maxMS = CONFIG['session']['calcMaxSpeedMs']
+        minMS = CONFIG['session']['calcMinSpeedMs']
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tBoundaries: {0} - {1}".format(round(msToKmt(minMS), 1), round(msToKmt(maxMS), 1)))
 
-        while(endSpeedMS > 1):
+        # Print End Speed
+        if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\n\tEnd Speed: {0}".format(endSpeedMS))
 
-            # possibleSpeed = [beginSpeedMS, endSpeedMS, beginSpeedKmt, endSpeedKmt, ttgNextBegin, ttgNextEnd]
+        if (endSpeedMS < 1):
+            # If you're at the light and the speed is you're supposed to do is less than 1 m/s
             possibleSpeed = SessionSpeed(beginSpeedMS, endSpeedMS, beginSpeedKmt, endSpeedKmt, ttgNextBegin, ttgNextEnd)
-
             possibleSpeed.bikeSpeed = bikeSpeed
-
+            possibleSpeed.gtsBegin = ttgNextBegin
+            possibleSpeed.gtsEnd = ttgNextEnd
+            # possibleSpeed.gtsBegin = ttgNextBegin
+            # possibleSpeed.gtsBegin = possibleSpeed.gtsEnd - revolution
             speeds.append(possibleSpeed)
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tEnd speed is less than 1 m/s.")
 
-            # print("\t[{0} m/s]\t[{1} m/s]\t[{2} km/t]\t[{3} km/t]\t[{4} s]\t\t[{5} s]".format(
-            #     round(beginSpeedMS, 1),
-            #     round(endSpeedMS, 1),
-            #     round(beginSpeedKmt, 1),
-            #     round(endSpeedKmt, 1),
-            #     ttgNextBegin,
-            #     ttgNextEnd
-            # ))
+        else:
 
-            # Calculate Next Time Span
-            ttgNextBegin = ttgNextBegin + revolution
-            ttgNextEnd = ttgNextEnd + revolution
+            while(endSpeedMS > 1):
 
-            # Calculate Next Speeds
-            beginSpeedMS = distance / ttgNextBegin
-            endSpeedMS = distance / ttgNextEnd
+                # possibleSpeed = [beginSpeedMS, endSpeedMS, beginSpeedKmt, endSpeedKmt, ttgNextBegin, ttgNextEnd]
+                possibleSpeed = SessionSpeed(beginSpeedMS, endSpeedMS, beginSpeedKmt, endSpeedKmt, ttgNextBegin, ttgNextEnd)
+                possibleSpeed.bikeSpeed = bikeSpeed
+                possibleSpeed.gtsBegin = ttgNextBegin
+                possibleSpeed.gtsEnd = ttgNextEnd
+                # possibleSpeed.gtsBegin = ttgNextBegin
+                # possibleSpeed.gtsBegin = possibleSpeed.gtsEnd - revolution
+                speeds.append(possibleSpeed)
 
-            # Calculate Km/t
-            beginSpeedKmt = msToKmt(beginSpeedMS)
-            endSpeedKmt = msToKmt(endSpeedMS)
+                # Calculate Next Time Span
+                ttgNextBegin = ttgNextBegin + revolution
+                ttgNextEnd = ttgNextEnd + revolution
 
+                # Calculate Next Speeds
+                beginSpeedMS = distance / ttgNextBegin
+                endSpeedMS = distance / ttgNextEnd
 
-        # Print all speeds
-        # for possibleSpeed in speeds:
-
-            # if(possibleSpeed.beginMs == None): continue
-
-            # possibleSpeed.info()
-
-            # print("\t[{0} m/s]\t[{1} m/s]\t[{2} km/t]\t[{3} km/t]\t[{4} s]\t\t[{5} s]".format(
-            #     round(possibleSpeed[0], 1),
-            #     round(possibleSpeed[1], 1),
-            #     round(possibleSpeed[2], 1),
-            #     round(possibleSpeed[3], 1),
-            #     possibleSpeed[4],
-            #     possibleSpeed[5]
-            # ))
+                # Calculate Km/t
+                beginSpeedKmt = msToKmt(beginSpeedMS)
+                endSpeedKmt = msToKmt(endSpeedMS)
 
         # Find out if the current speed is between
         currentSpeedInGreenTimespan = False
 
         if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+            print("\n\tCalculate Speed Differences")
             print("\n")
 
         # speedDifferences = []
@@ -758,12 +783,6 @@ class Session:
                 if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
                     print("\t{0}".format(possibleSpeed.info()))
 
-                # print("\tTesting:\t\t\t\t[{0}]\t{1}\t[{2}]".format(
-                #     round(bikeSpeed,1),
-                #     round(possibleSpeedDifferenceA, 1),
-                #     round(possibleSpeed[3],1)
-                # ))
-
                 if bikeSpeed > possibleSpeed.endKmt:
                     currentSpeedInGreenTimespan = True
                     # break
@@ -778,42 +797,9 @@ class Session:
             if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
                 print("\t{0}".format(possibleSpeed.info()))
 
-            # Testing next speed
-
-
-            # print("\tTesting:\t[{0}]\t{1}\t\t[{2}]({3})[{4}]\t{5}\t\t{6}".format(
-            #     round(bikeSpeed,1),
-            #     round(possibleSpeedDifferenceA, 1),
-            #     round(possibleSpeed[2],1),
-            #     round(avgSpeed,1),
-            #     round(possibleSpeed[3],1),
-            #     round(possibleSpeedDifferenceB, 1),
-            #     possibleAvgDifference
-            # ))
-
-            # possibleSpeed.append()
-
             if bikeSpeed < possibleSpeed.beginKmt and bikeSpeed > possibleSpeed.endKmt:
                 currentSpeedInGreenTimespan = True
                 # break
-
-
-
-        # if currentSpeedInGreenTimespan:
-        #     if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-        #         print("\n\tThis is a green speed!")
-        #
-        #     self.bicycle.speedChange = 0
-        #     self.bicycle.targetSpeed = bikeSpeed
-        #     self.bicycle.deviceColor[0] = 0
-        #     self.bicycle.deviceColor[1] = 255
-        #     self.bicycle.deviceColor[2] = 0
-        #
-        #     return
-        #
-        # else:
-        #     if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-        #         print("\n\tThis not a green speed!\n")
 
         if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
             print("\n\tCalculate Target Speed and Changes\n")
@@ -835,19 +821,6 @@ class Session:
         # ----------------------------------------------------------------------
         # speeds = sorted(speeds, key=attrgetter('relativeSpeedChange'))
         speeds = sorted(speeds, key=attrgetter('targetSpeed'), reverse=True)
-
-        if bikeSpeed < CONFIG['session']['minSpeed']:
-            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
-                print("\n\tYou're moving with walking or less speed!")
-
-            self.bicycle.speedChange = 0
-            self.bicycle.targetSpeed = bikeSpeed
-            self.bicycle.deviceColor[0] = 255
-            self.bicycle.deviceColor[1] = 0
-            self.bicycle.deviceColor[2] = 255
-
-            return
-
 
         maxUpSpeedChange = bikeSpeed * 0.1
         targetMaxSpeed = CONFIG['session']['targetMaxSpeed']
@@ -907,9 +880,14 @@ class Session:
         self.bicycle.speedChange = finalSpeed.speedChange
         self.bicycle.targetSpeed = finalSpeed.targetSpeed
 
+        # Testing
         red = 0
         green = 0
         blue = 0
+
+        # ----------------------------------------------------------------------
+        # Calculate color
+        # ----------------------------------------------------------------------
 
         if CONFIG['session']['colorAlgoritm'] == "sinCosColor":
 
@@ -919,36 +897,71 @@ class Session:
 
             percentOffset = 0
 
-            if avgOffset is not 0:
+            if avgOffset != 0:
+                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tAvg Offset: {0}".format(avgOffset))
                 percentOffset = abs(differenceFromAvg / avgOffset)
 
             if percentOffset > 1: percentOffset = 1
-
+            if finalSpeed.gtsBegin <= 0: percentOffset = 1
             piOffset = math.pi / 2 * percentOffset
 
-            if finalSpeed.speedChange == 0:
 
-                if differenceFromAvg == 0:
-                    green = 255
 
-                if differenceFromAvg > 0:
+
+            # finalSpeed.gtsBegin = 0
+
+            if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                print("\n\t# Calculate Color #")
+                print("\tSpeed Change: {0}\n\tGTS Begin: {1}".format(finalSpeed.speedChange, finalSpeed.gtsBegin))
+                print("\tPi Offset: {0}".format(piOffset))
+
+            if finalSpeed.speedChange == 0 or finalSpeed.gtsBegin <= 0:
+
+                if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']:
+                    print("\nAmbient Color.\n")
+
+                if finalSpeed.speedChange > 0:
                     if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe speed up?")
                     red = int(sin(piOffset) * 255 / 2)
                     green = 255 - red
                     # green = int(cos(piOffset) * 255 / 2 + 123)
 
-                else:
+                elif finalSpeed.speedChange < 0:
                     if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe slow down?")
                     blue = int(sin(piOffset) * 255 / 2)
                     green = 255 - blue
                     # green = int((cos(piOffset) * 255 / 2) + 123)
 
-            if finalSpeed.speedChange > 0:
+                elif differenceFromAvg > 0:
+                    if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe speed up?")
+                    red = int(sin(piOffset) * 255 / 2)
+                    green = 255 - red
+                    # green = int(cos(piOffset) * 255 / 2 + 123)
+
+                elif differenceFromAvg < 0:
+                    if CONFIG['debug']['session']['calcBicycleTargetSpeedAndColor']: print("\tMaybe slow down?")
+                    blue = int(sin(piOffset) * 255 / 2)
+                    green = 255 - blue
+                    # green = int((cos(piOffset) * 255 / 2) + 123)
+
+                elif differenceFromAvg == 0:
+                    green = 255
+
+                else:
+                    red = 255
+                    blue = 255
+
+            elif finalSpeed.speedChange > 0:
 
                 red = 255
 
             elif finalSpeed.speedChange < 0:
 
+                blue = 255
+
+            else:
+
+                red = 255
                 blue = 255
 
         # Print
@@ -968,6 +981,7 @@ class Session:
             print("\tRed color: {0}".format(red))
             print("\tGreen color: {0}".format(green))
             print("\tBlue color: {0}".format(blue))
+            print("\n")
 
         # ----------------------------------------------------------------------
         # Old Color Algorithm
@@ -1078,9 +1092,9 @@ class Session:
         message = message + "\tCourse:\t\t\t\t{0} degrees\n".format(self.bicycle.course)
         message = message + "\tSpeed:\t\t\t\t{0} km/t\n".format(self.bicycle.speed)
         message = message + "\tSpeed Change:\t\t\t{0} km/t\n".format(round(self.bicycle.speedChange, 1))
-        message = message + "\tTarget Speed:\t\t\t{0} km/t\n".format(round(self.bicycle.targetSpeed, 1))
-        message = message + "\tGreen Begin Speed:\t\t\t{0} km/t\n".format(round(self.bicycle.beginSpeed, 1))
-        message = message + "\tGreen End Speed:\t\t\t{0} km/t\n".format(round(self.bicycle.endSpeed, 1))
+        message = message + "\tTarget Speed:\t\t\t{0} km/t\n\n".format(round(self.bicycle.targetSpeed, 1))
+        message = message + "\tGreen Begin Speed:\t\t{0} km/t\n".format(round(self.bicycle.beginSpeed, 1))
+        message = message + "\tGreen End Speed:\t\t{0} km/t\n\n".format(round(self.bicycle.endSpeed, 1))
         message = message + "\tDistance to next signal:\t{0} m\n".format(round(self.bicycle.distanceToNXS, 1))
 
         return {

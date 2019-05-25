@@ -1,6 +1,7 @@
 # Recompile javascript
 browserify javascript.js -o static/js/bundle.js
 browserify javascript/sessionPage.js -o static/js/sessionPageBundle.js
+browserify javascript/colorPage.js -o static/js/colorPageBundle.js
 # browserify javascript/color.js -o static/js/color.js
 # browserify javascript/global.js -o static/js/global.js
 

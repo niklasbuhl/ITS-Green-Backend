@@ -1068,7 +1068,8 @@ module.exports={
 
   "pages" : {
     "hello" : "/",
-    "map" : "/map",
+    "map" : "/map/",
+    "color" : "/color/",
     "control" : "/control/",
     "session" : "/session/",
     "routeIntxns" : "/routeintxns/"
