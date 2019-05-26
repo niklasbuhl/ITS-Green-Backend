@@ -317,9 +317,9 @@ print("# Run a few tests...")
 print("# ---------------------------------------------------------------")
 
 sesh.bicycle.setUpdated(0)
-# sesh.bicycle.setLocation(Location(55.683634, 12.571796)) # Nørreport
+sesh.bicycle.setLocation(Location(55.683634, 12.571796)) # Nørreport
 # sesh.bicycle.setLocation(Location(55.687246, 12.562479)) # Just in front of the first intersection
-sesh.bicycle.setLocation(Location(55.688477, 12.559254)) # After Fælledvej
+# sesh.bicycle.setLocation(Location(55.688477, 12.559254)) # After Fælledvej
 sesh.bicycle.setSpeed(20)
 sesh.bicycle.setCourse(300)
 
