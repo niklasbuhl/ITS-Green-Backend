@@ -14,11 +14,11 @@
 // var carYellowStraightPNG = new Image();
 // var carGreyStraightPNG = new Image();
 //
-// carRedStraightPNG.src = "./static/media/car-red-straight.png";
-// carOrangeStraightPNG.src = "./static/media/car-orange-straight.png";
-// carGreenStraightPNG.src = "./static/media/car-green-straight.png";
-// carYellowStraightPNG.src = "./static/media/car-yellow-straight.png";
-// carGreyStraightPNG.src = "./static/media/car-grey-straight.png";
+// carRedStraightPNG.src = "/static/media/car-red-straight.png";
+// carOrangeStraightPNG.src = "/static/media/car-orange-straight.png";
+// carGreenStraightPNG.src = "/static/media/car-green-straight.png";
+// carYellowStraightPNG.src = "/static/media/car-yellow-straight.png";
+// carGreyStraightPNG.src = "/static/media/car-grey-straight.png";
 
 // -----------------------------------------------------------------------------
 // Icons
@@ -31,7 +31,7 @@ var BicycleIcon = L.Icon.extend({
   }
 }),
   bicycleIcon = new BicycleIcon({
-    iconUrl:    './static/media/bicycle-icon.png'
+    iconUrl:    '/static/media/bicycle-icon.png'
   });
 
 var CarStraightIcon = L.Icon.extend({
@@ -41,12 +41,12 @@ var CarStraightIcon = L.Icon.extend({
       }
     }),
 
-    carStraightIconRed = new CarStraightIcon({ iconUrl: './static/media/car-red-straight.png'}),
-    carStraightIconOrange = new CarStraightIcon({ iconUrl: './static/media/car-orange-straight.png'}),
-    carStraightIconGreen = new CarStraightIcon({ iconUrl: './static/media/car-green-straight.png'}),
-    carStraightIconYellow = new CarStraightIcon({ iconUrl: './static/media/car-yellow-straight.png'}),
-    carStraightIconGrey = new CarStraightIcon({ iconUrl: './static/media/car-grey-straight.png'}),
-    carStraightIconBlue = new CarStraightIcon({ iconUrl: './static/media/car-blue-straight.png'}),
+    carStraightIconRed = new CarStraightIcon({ iconUrl: '/static/media/car-red-straight.png'}),
+    carStraightIconOrange = new CarStraightIcon({ iconUrl: '/static/media/car-orange-straight.png'}),
+    carStraightIconGreen = new CarStraightIcon({ iconUrl: '/static/media/car-green-straight.png'}),
+    carStraightIconYellow = new CarStraightIcon({ iconUrl: '/static/media/car-yellow-straight.png'}),
+    carStraightIconGrey = new CarStraightIcon({ iconUrl: '/static/media/car-grey-straight.png'}),
+    carStraightIconBlue = new CarStraightIcon({ iconUrl: '/static/media/car-blue-straight.png'}),
 
     CarRightIcon = L.Icon.extend({
       options: {
@@ -55,12 +55,12 @@ var CarStraightIcon = L.Icon.extend({
       }
     }),
 
-    carRightIconRed = new CarRightIcon({ iconUrl: './static/media/car-red-right.png'}),
-    carRightIconOrange = new CarRightIcon({ iconUrl: './static/media/car-orange-right.png'}),
-    carRightIconGreen = new CarRightIcon({ iconUrl: './static/media/car-green-right.png'}),
-    carRightIconYellow = new CarRightIcon({ iconUrl: './static/media/car-yellow-right.png'}),
-    carRightIconGrey = new CarRightIcon({ iconUrl: './static/media/car-grey-right.png'}),
-    carRightIconBlue = new CarRightIcon({ iconUrl: './static/media/car-blue-right.png'}),
+    carRightIconRed = new CarRightIcon({ iconUrl: '/static/media/car-red-right.png'}),
+    carRightIconOrange = new CarRightIcon({ iconUrl: '/static/media/car-orange-right.png'}),
+    carRightIconGreen = new CarRightIcon({ iconUrl: '/static/media/car-green-right.png'}),
+    carRightIconYellow = new CarRightIcon({ iconUrl: '/static/media/car-yellow-right.png'}),
+    carRightIconGrey = new CarRightIcon({ iconUrl: '/static/media/car-grey-right.png'}),
+    carRightIconBlue = new CarRightIcon({ iconUrl: '/static/media/car-blue-right.png'}),
 
     BicycleStraightIcon = L.Icon.extend({
       options: {
@@ -69,12 +69,12 @@ var CarStraightIcon = L.Icon.extend({
       }
     }),
 
-    bicycleStraightIconRed = new BicycleStraightIcon({ iconUrl: './static/media/bicycle-red-straight.png'}),
-    bicycleStraightIconOrange = new BicycleStraightIcon({ iconUrl: './static/media/bicycle-orange-straight.png'}),
-    bicycleStraightIconGreen = new BicycleStraightIcon({ iconUrl: './static/media/bicycle-green-straight.png'}),
-    bicycleStraightIconYellow = new BicycleStraightIcon({ iconUrl: './static/media/bicycle-yellow-straight.png'}),
-    bicycleStraightIconGrey = new BicycleStraightIcon({ iconUrl: './static/media/bicycle-grey-straight.png'}),
-    bicycleStraightIconBlue = new BicycleStraightIcon({ iconUrl: './static/media/bicycle-blue-straight.png'}),
+    bicycleStraightIconRed = new BicycleStraightIcon({ iconUrl: '/static/media/bicycle-red-straight.png'}),
+    bicycleStraightIconOrange = new BicycleStraightIcon({ iconUrl: '/static/media/bicycle-orange-straight.png'}),
+    bicycleStraightIconGreen = new BicycleStraightIcon({ iconUrl: '/static/media/bicycle-green-straight.png'}),
+    bicycleStraightIconYellow = new BicycleStraightIcon({ iconUrl: '/static/media/bicycle-yellow-straight.png'}),
+    bicycleStraightIconGrey = new BicycleStraightIcon({ iconUrl: '/static/media/bicycle-grey-straight.png'}),
+    bicycleStraightIconBlue = new BicycleStraightIcon({ iconUrl: '/static/media/bicycle-blue-straight.png'}),
 
     BicycleRightIcon = L.Icon.extend({
       options: {
@@ -83,12 +83,12 @@ var CarStraightIcon = L.Icon.extend({
       }
     }),
 
-    bicycleRightIconRed = new BicycleRightIcon({ iconUrl: './static/media/bicycle-red-right.png'}),
-    bicycleRightIconOrange = new BicycleRightIcon({ iconUrl: './static/media/bicycle-orange-right.png'}),
-    bicycleRightIconGreen = new BicycleRightIcon({ iconUrl: './static/media/bicycle-green-right.png'}),
-    bicycleRightIconYellow = new BicycleRightIcon({ iconUrl: './static/media/bicycle-yellow-right.png'}),
-    bicycleRightIconGrey = new BicycleRightIcon({ iconUrl: './static/media/bicycle-grey-right.png'});
-    bicycleRightIconBlue = new BicycleRightIcon({ iconUrl: './static/media/bicycle-blue-right.png'});
+    bicycleRightIconRed = new BicycleRightIcon({ iconUrl: '/static/media/bicycle-red-right.png'}),
+    bicycleRightIconOrange = new BicycleRightIcon({ iconUrl: '/static/media/bicycle-orange-right.png'}),
+    bicycleRightIconGreen = new BicycleRightIcon({ iconUrl: '/static/media/bicycle-green-right.png'}),
+    bicycleRightIconYellow = new BicycleRightIcon({ iconUrl: '/static/media/bicycle-yellow-right.png'}),
+    bicycleRightIconGrey = new BicycleRightIcon({ iconUrl: '/static/media/bicycle-grey-right.png'});
+    bicycleRightIconBlue = new BicycleRightIcon({ iconUrl: '/static/media/bicycle-blue-right.png'});
 
 const TYPE = {
   CAR_S : 'CAR_S',
