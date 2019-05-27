@@ -302,7 +302,8 @@ sim.loadIntersections(data)
 
 sesh = Session('Noerrebrogade Going West', Bicycle('b01', Location(0,0), 0, 0), Route('r01'))
 
-sesh.loadRouteGPX('./gpx/dronninglouisesbro-frederikssundvej.gpx')
+# sesh.loadRouteGPX('./gpx/dronninglouisesbro-frederikssundvej.gpx')
+sesh.loadRouteGPX('./gpx/frederikssundvej-dronninglouisesbro.gpx')
 
 sesh.calcRouteIntxnsAndSignals(sim)
 
