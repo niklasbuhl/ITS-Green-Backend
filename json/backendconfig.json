@@ -30,7 +30,7 @@
 
   "session" : {
     "minSpeed" : 5,
-    "targetMaxSpeed" : 27,
+    "targetMaxSpeed" : 16,
     "colorAlgoritm" : "sinCosColor",
     "calcMinSpeedMs" : 1,
     "calcMaxSpeedMs" : 40
