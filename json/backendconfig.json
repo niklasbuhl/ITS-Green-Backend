@@ -2,13 +2,13 @@
   "debug" : {
     "simulation" : {
       "getSignal" : false,
-      "calcSignalStateAndTTG" : false
+      "calcSignalStateAndTTG" : true
     },
     "session" : {
-      "calcBicycleTargetSpeedAndColor" : false,
-      "calcNextSignalStateAndTTG" : false,
-      "calcNextSignal" : false,
-      "SessionSpeed" : false
+      "calcBicycleTargetSpeedAndColor" : true,
+      "calcNextSignalStateAndTTG" : true,
+      "calcNextSignal" : true,
+      "SessionSpeed" : true
     },
 
     "loadingJSON" : false,
